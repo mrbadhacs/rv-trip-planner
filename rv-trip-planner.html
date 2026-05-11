@@ -827,7 +827,7 @@
           <tr><td>Black Water</td><td>40 gallons</td></tr>
           <tr><td>Water Heater</td><td>6-gallon LP/Electric</td></tr>
           <tr><td>Generator</td><td>Onan 5.5kW LP</td></tr>
-          <tr><td>LP Tanks</td><td>2 × 20 lb</td></tr>
+          <tr><td>LP Tank</td><td>1 × 20.8-gallon ASME (≈ 88 lbs propane)</td></tr>
           <tr><td>Air Conditioning</td><td>Dual 15,000 BTU</td></tr>
           <tr><td>Furnace</td><td>35,000 BTU Ducted</td></tr>
         </table>
@@ -1659,17 +1659,13 @@
 
         <!-- LP / Propane -->
         <div class="energy-card" style="margin-bottom:20px">
-          <h3>🔥 Propane (2 × 20 lb tanks = 40 lbs)</h3>
+          <h3>🔥 Propane (20.8-gal ASME tank ≈ 88 lbs)</h3>
           <div class="energy-input-row">
-            <label>Tank 1 (lbs remaining)</label>
-            <input type="number" id="lp1" value="18" min="0" max="20" oninput="calcEnergy()"> lbs
-          </div>
-          <div class="energy-input-row">
-            <label>Tank 2 (lbs remaining)</label>
-            <input type="number" id="lp2" value="20" min="0" max="20" oninput="calcEnergy()"> lbs
+            <label>Current level (gallons)</label>
+            <input type="number" id="lpGal" value="18" min="0" max="20.8" step="0.1" oninput="calcEnergy()"> gal
           </div>
           <div class="gauge-wrap">
-            <div class="gauge-label"><span>Empty (0 lbs)</span><span>Full (40 lbs)</span></div>
+            <div class="gauge-label"><span>Empty (0 gal)</span><span>Full (20.8 gal)</span></div>
             <div class="gauge"><div class="gauge-fill green" id="lpGauge" style="width:95%"></div></div>
           </div>
           <div class="energy-input-row" style="margin-top:14px">
@@ -1789,7 +1785,7 @@
               Onan 5.5kW generator: ~0.45 gal/hr (3.75 lbs/hr)<br>
               Furnace (35,000 BTU): ~0.40 lbs/hr when firing<br>
               LP fridge: ~0.10 lbs/hr · Water heater: ~0.05 lbs/hr<br>
-              1 lb LP ≈ 0.236 gal · Full 20-lb tank ≈ 4.7 gal
+              1 gal LP ≈ 4.24 lbs · Full 20.8-gal tank ≈ 88 lbs propane
             </p>
           </div>
         </div>
@@ -2011,8 +2007,9 @@
     const fuel     = parseFloat(document.getElementById('fuelGal').value)   || 0;
     const miles    = parseFloat(document.getElementById('driveMiles').value) || 0;
     const mpg      = parseFloat(document.getElementById('mpg').value)        || 8;
-    const lp1      = parseFloat(document.getElementById('lp1').value)        || 0;
-    const lp2      = parseFloat(document.getElementById('lp2').value)        || 0;
+    const lpGal    = parseFloat(document.getElementById('lpGal').value)       || 0;
+    const lp1      = lpGal * 4.24;  // convert gal → lbs (1 gal propane = 4.24 lbs)
+    const lp2      = 0;
     const genHrs   = parseFloat(document.getElementById('genHrs').value)     || 0;
     const furnace  = parseFloat(document.getElementById('furnace').value)    || 0;
     const nights   = parseFloat(document.getElementById('nights').value)     || 1;
@@ -2045,7 +2042,7 @@
     const lpTotal    = lpPerNight * nights;
     const lpOnBoard  = lp1 + lp2;
     const lpLeft     = Math.max(0, lpOnBoard - lpTotal);
-    const lpPct      = Math.min(100, (lpOnBoard / 40) * 100);
+    const lpPct      = Math.min(100, (lpOnBoard / 88.2) * 100);
 
     // how many hours of generator the remaining LP can power
     const genTimeAvail = lpOnBoard / genBurn;
@@ -2542,9 +2539,8 @@
   function buildFuelBlock(miles, nights, campsiteType) {
     // pull live values from energy calculator if filled in, else use defaults
     const fuelOnBoard = parseFloat(document.getElementById('fuelGal').value) || 60;
-    const lp1 = parseFloat(document.getElementById('lp1').value) || 18;
-    const lp2 = parseFloat(document.getElementById('lp2').value) || 20;
-    const lpOnBoard = lp1 + lp2;
+    const lpGal = parseFloat(document.getElementById('lpGal').value) || 18;
+    const lpOnBoard = lpGal * 4.24;
     const mpg = parseFloat(document.getElementById('mpg').value) || 8;
 
     const fuelNeeded  = (miles * 2) / mpg; // round trip

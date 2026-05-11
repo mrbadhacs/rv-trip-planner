@@ -1,0 +1,2380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Badalamenti Family RV Trip Planner — Thor WindSport 29M</title>
+  <style>
+    :root {
+      --sky: #1a6b9a;
+      --sun: #f5a623;
+      --forest: #2d6a4f;
+      --sand: #f8f3e8;
+      --dusk: #2c3e50;
+      --road: #4a4a4a;
+      --accent: #e07b39;
+      --white: #ffffff;
+      --light: #f0f4f8;
+      --border: #dce3ea;
+      --danger: #c0392b;
+      --success: #27ae60;
+    }
+
+    html { scroll-behavior: smooth; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--sand);
+      color: var(--dusk);
+      line-height: 1.6;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--sky) 0%, var(--dusk) 60%, var(--forest) 100%);
+      color: var(--white);
+      padding: 60px 40px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 50px;
+      padding: 6px 18px;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+    }
+    .hero h1 span { color: var(--sun); }
+    .hero p {
+      font-size: 1.15rem;
+      opacity: 0.85;
+      max-width: 620px;
+      margin: 0 auto 28px;
+    }
+    .hero-icons { font-size: 2rem; letter-spacing: 8px; }
+
+    /* ── NAV ── */
+    .nav {
+      background: var(--dusk);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0 20px;
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav::-webkit-scrollbar { display: none; }
+    .nav a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      padding: 16px 18px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+      letter-spacing: 0.04em;
+    }
+    .nav a:hover { color: var(--sun); border-bottom-color: var(--sun); }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 70px 0; }
+    .section-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    .section-tag {
+      display: inline-block;
+      background: var(--sky);
+      color: var(--white);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 50px;
+      margin-bottom: 12px;
+    }
+    .section-header h2 {
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 800;
+      color: var(--dusk);
+      margin-bottom: 10px;
+    }
+    .section-header p {
+      color: #666;
+      font-size: 1.05rem;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      border: 1px solid var(--border);
+    }
+    .card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--dusk);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+
+    /* ── SPECS ── */
+    .specs-hero {
+      background: linear-gradient(135deg, var(--dusk), var(--sky));
+      border-radius: 20px;
+      padding: 40px;
+      color: var(--white);
+      margin-bottom: 36px;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .rv-icon { font-size: 5rem; flex-shrink: 0; }
+    .specs-title h2 { font-size: 1.8rem; font-weight: 800; }
+    .specs-title p { opacity: 0.8; font-size: 1rem; margin-top: 4px; }
+    .specs-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    .badge {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .spec-table { width: 100%; border-collapse: collapse; }
+    .spec-table tr { border-bottom: 1px solid var(--border); }
+    .spec-table tr:last-child { border-bottom: none; }
+    .spec-table td { padding: 12px 8px; font-size: 0.92rem; }
+    .spec-table td:first-child { color: #888; font-weight: 500; width: 45%; }
+    .spec-table td:last-child { font-weight: 700; color: var(--dusk); }
+
+    .capacity-bar { margin-top: 8px; }
+    .capacity-label { display: flex; justify-content: space-between; font-size: 0.82rem; color: #888; margin-bottom: 4px; }
+    .bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; }
+    .bar-fill.fresh { background: #3498db; }
+    .bar-fill.gray { background: #95a5a6; }
+    .bar-fill.black { background: #2c3e50; }
+
+    /* ── ALERTS ── */
+    .alert {
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      font-size: 0.92rem;
+    }
+    .alert-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 1px; }
+    .alert.danger { background: #fdf2f2; border: 1px solid #f5c6c6; color: #922b21; }
+    .alert.warning { background: #fef9e7; border: 1px solid #f9e79f; color: #7d6608; }
+    .alert.success { background: #eafaf1; border: 1px solid #a9dfbf; color: #1e8449; }
+    .alert.info { background: #eaf4fc; border: 1px solid #aed6f1; color: #1a5276; }
+    .alert strong { display: block; font-weight: 700; margin-bottom: 4px; }
+
+    /* ── ROUTES ── */
+    .route-card {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      border: 1px solid var(--border);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .route-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+    .route-header {
+      padding: 22px 24px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .route-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .route-header h3 { font-size: 1.2rem; font-weight: 800; }
+    .route-meta {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      font-size: 0.82rem;
+      color: #888;
+    }
+    .route-meta span { display: flex; align-items: center; gap: 4px; }
+    .route-body { padding: 20px 24px; }
+    .route-stops { list-style: none; }
+    .route-stops li {
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9rem;
+    }
+    .route-stops li:last-child { border-bottom: none; }
+    .stop-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--sky);
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .stop-info strong { display: block; color: var(--dusk); }
+    .stop-info span { color: #777; font-size: 0.82rem; }
+
+    /* ── TRIP PLANNER ── */
+    #planner { background: linear-gradient(180deg, var(--sand) 0%, #e8f0f5 100%); }
+    .planner-form {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border: 1px solid var(--border);
+      max-width: 720px;
+      margin: 0 auto 40px;
+    }
+    .form-group { margin-bottom: 22px; }
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--dusk);
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+    .form-group label span { color: #999; font-weight: 400; }
+    .form-control {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      color: var(--dusk);
+      background: var(--light);
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+    .form-control:focus { outline: none; border-color: var(--sky); background: white; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .quick-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 13px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 2px solid var(--border);
+      background: var(--white);
+      color: var(--dusk);
+      transition: all 0.18s;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+    .quick-btn:hover { border-color: var(--sky); color: var(--sky); background: #eaf4fc; }
+    .quick-btn.gps-btn:hover { border-color: var(--forest); color: var(--forest); background: #eafaf1; }
+    .quick-btn.loading { opacity: 0.6; pointer-events: none; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--sky);
+      color: white;
+      width: 100%;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    .btn-primary:hover { background: #155a82; transform: translateY(-1px); }
+
+    .trip-result {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border: 1px solid var(--border);
+      max-width: 900px;
+      margin: 0 auto;
+      display: none;
+    }
+    .trip-result.visible { display: block; }
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--border);
+    }
+    .result-icon {
+      width: 56px;
+      height: 56px;
+      background: var(--sky);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+    .result-title h3 { font-size: 1.4rem; font-weight: 800; }
+    .result-title p { color: #777; font-size: 0.9rem; }
+
+    .campsite-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      transition: border-color 0.2s;
+    }
+    .campsite-card:hover { border-color: var(--sky); }
+    .campsite-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    .campsite-name { font-weight: 700; font-size: 1rem; color: var(--dusk); }
+    .campsite-type {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 50px;
+      flex-shrink: 0;
+    }
+    .type-state { background: #eaf4fc; color: #1a6b9a; }
+    .type-national { background: #eafaf1; color: #1e8449; }
+    .type-private { background: #fdf2e9; color: #a04000; }
+    .type-rv { background: #f5eef8; color: #7d3c98; }
+    .campsite-meta { display: flex; gap: 16px; font-size: 0.82rem; color: #888; flex-wrap: wrap; }
+    .campsite-desc { font-size: 0.9rem; color: #555; margin-top: 8px; }
+
+    /* ── DESTINATIONS ── */
+    .dest-card {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      border: 1px solid var(--border);
+      transition: transform 0.2s;
+    }
+    .dest-card:hover { transform: translateY(-4px); }
+    .dest-thumb {
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+    }
+    .dest-body { padding: 20px; }
+    .dest-body h3 { font-size: 1rem; font-weight: 800; margin-bottom: 6px; }
+    .dest-body p { font-size: 0.85rem; color: #666; margin-bottom: 10px; }
+    .dest-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .dest-tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 50px;
+      background: var(--light);
+      color: var(--sky);
+      border: 1px solid var(--border);
+    }
+    .age-chip {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 50px;
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    /* ── UPGRADES ── */
+    .upgrade-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 22px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .upgrade-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 12px; }
+    .upgrade-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .upgrade-icon.safety { background: #fdf2f2; }
+    .upgrade-icon.comfort { background: #eaf4fc; }
+    .upgrade-icon.tech { background: #f5eef8; }
+    .upgrade-icon.power { background: #fef9e7; }
+    .upgrade-icon.kids { background: #eafaf1; }
+    .upgrade-title strong { display: block; font-weight: 700; font-size: 0.98rem; }
+    .upgrade-title span { font-size: 0.8rem; color: var(--accent); font-weight: 600; }
+    .upgrade-desc { font-size: 0.87rem; color: #555; }
+    .priority-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 50px;
+      margin-top: 8px;
+    }
+    .priority-must { background: #fdf2f2; color: #c0392b; }
+    .priority-high { background: #fef9e7; color: #9a7d0a; }
+    .priority-nice { background: #eafaf1; color: #1e8449; }
+
+    /* ── SAFETY ── */
+    .safety-section { background: var(--dusk); }
+    .safety-section .section-tag { background: var(--accent); }
+    .safety-section .section-header h2 { color: var(--white); }
+    .safety-section .section-header p { color: rgba(255,255,255,0.7); }
+    .safety-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 24px;
+      color: var(--white);
+    }
+    .safety-card h3 { color: var(--sun); font-size: 1rem; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .safety-list { list-style: none; }
+    .safety-list li {
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.85);
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .safety-list li:last-child { border-bottom: none; }
+    .safety-list li::before { content: '→'; color: var(--sun); flex-shrink: 0; }
+
+    /* ── QUESTIONS ── */
+    .questions-section {
+      background: linear-gradient(135deg, var(--sun) 0%, var(--accent) 100%);
+    }
+    .question-chip {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 10px;
+      padding: 14px 18px;
+      color: white;
+      font-size: 0.9rem;
+      display: flex;
+      gap: 12px;
+    }
+    .q-num {
+      font-size: 1.2rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .q-text strong { display: block; font-weight: 700; margin-bottom: 3px; }
+    .q-text span { opacity: 0.85; font-size: 0.85rem; }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--dusk);
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      padding: 30px 20px;
+      font-size: 0.85rem;
+    }
+    .footer strong { color: var(--sun); }
+
+    /* ── ENERGY MANAGER ── */
+    #energy { background: #0f1f2e; }
+    #energy .section-tag { background: var(--sun); color: var(--dusk); }
+    #energy .section-header h2 { color: white; }
+    #energy .section-header p { color: rgba(255,255,255,0.65); }
+
+    .energy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media(max-width:700px){ .energy-grid { grid-template-columns: 1fr; } }
+
+    .energy-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 24px;
+      color: white;
+    }
+    .energy-card h3 {
+      font-size: 1rem; font-weight: 700;
+      margin-bottom: 18px;
+      display: flex; align-items: center; gap: 8px;
+      color: var(--sun);
+    }
+    .energy-input-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .energy-input-row label { font-size: 0.85rem; color: rgba(255,255,255,0.75); }
+    .energy-input-row input, .energy-input-row select {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      color: white;
+      padding: 7px 12px;
+      font-size: 0.9rem;
+      width: 120px;
+      text-align: right;
+      font-family: inherit;
+    }
+    .energy-input-row input:focus, .energy-input-row select:focus {
+      outline: none; border-color: var(--sun);
+    }
+    .energy-input-row select option { background: #1a2e42; color: white; }
+
+    .gauge-wrap { margin: 16px 0 8px; }
+    .gauge-label { display: flex; justify-content: space-between; font-size: 0.78rem; color: rgba(255,255,255,0.55); margin-bottom: 5px; }
+    .gauge { height: 12px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; }
+    .gauge-fill { height: 100%; border-radius: 6px; transition: width 0.5s ease; }
+    .gauge-fill.green  { background: linear-gradient(90deg,#27ae60,#2ecc71); }
+    .gauge-fill.yellow { background: linear-gradient(90deg,#f39c12,#f1c40f); }
+    .gauge-fill.red    { background: linear-gradient(90deg,#c0392b,#e74c3c); }
+
+    .result-panel {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-top: 18px;
+    }
+    .result-panel .result-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.88rem;
+    }
+    .result-panel .result-row:last-child { border-bottom: none; }
+    .result-panel .result-row span:first-child { color: rgba(255,255,255,0.65); }
+    .result-panel .result-row span:last-child { font-weight: 700; }
+    .ok   { color: #2ecc71; }
+    .warn { color: #f1c40f; }
+    .bad  { color: #e74c3c; }
+
+    .reco-box {
+      margin-top: 20px;
+      border-radius: 12px;
+      padding: 16px 18px;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+    .reco-box.green  { background: rgba(46,204,113,0.12); border: 1px solid rgba(46,204,113,0.3); color: #a9f5cb; }
+    .reco-box.yellow { background: rgba(241,196,15,0.12); border: 1px solid rgba(241,196,15,0.3); color: #fde68a; }
+    .reco-box.red    { background: rgba(231,76,60,0.12); border: 1px solid rgba(231,76,60,0.3); color: #fca5a5; }
+    .reco-box strong { display: block; margin-bottom: 6px; font-size: 0.92rem; }
+
+    .campsite-finder-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 28px;
+      margin-top: 28px;
+      color: white;
+    }
+    .campsite-finder-card h3 { color: var(--sun); font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .campsite-finder-card p { color: rgba(255,255,255,0.65); font-size: 0.88rem; margin-bottom: 20px; }
+    .finder-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 14px; }
+    .finder-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 18px 14px;
+      color: white;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+      cursor: pointer;
+    }
+    .finder-btn:hover { background: rgba(255,255,255,0.13); border-color: var(--sun); }
+    .finder-btn .fb-icon { font-size: 1.8rem; }
+    .finder-btn .fb-label { font-size: 0.82rem; font-weight: 700; }
+    .finder-btn .fb-sub { font-size: 0.72rem; color: rgba(255,255,255,0.5); }
+
+    .live-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(231,76,60,0.2);
+      border: 1px solid rgba(231,76,60,0.4);
+      border-radius: 50px;
+      padding: 4px 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #fca5a5;
+      margin-left: 10px;
+    }
+    .live-dot {
+      width: 7px; height: 7px;
+      background: #e74c3c;
+      border-radius: 50%;
+      animation: pulse 1.4s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── DIVIDER ── */
+    hr.divider {
+      border: none;
+      border-top: 2px dashed var(--border);
+      margin: 20px 0;
+    }
+
+    @media (max-width: 640px) {
+      .form-row { grid-template-columns: 1fr; }
+      .specs-hero { flex-direction: column; text-align: center; }
+      .hero { padding: 40px 20px 60px; }
+      .section { padding: 50px 0; }
+      .planner-form, .trip-result { padding: 24px; }
+      .result-header { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ HERO ══════════ -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-badge">🏕️ Badalamenti Family · Road Life</div>
+    <h1>Your <span>Thor WindSport 29M</span><br/>Road Trip Command Center</h1>
+    <p>Everything you need to explore America with your family — specs, routes, campsites, national parks, and a smart trip planner built just for your RV.</p>
+    <div class="hero-icons">🚐 🗺️ 🏕️ 🌲 👧👧</div>
+  </div>
+</div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav class="nav">
+  <a href="#specs">RV Specs</a>
+  <a href="#safety">Safety &amp; Driving</a>
+  <a href="#routes">Best Routes</a>
+  <a href="#planner">Trip Planner</a>
+  <a href="#destinations">Top Destinations</a>
+  <a href="#upgrades">Upgrades</a>
+  <a href="#energy">⚡ Energy</a>
+  <a href="#questions">Questions</a>
+</nav>
+
+<!-- ══════════ SPECS ══════════ -->
+<section class="section" id="specs">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Your RV</div>
+      <h2>2018 Thor WindSport 29M — Full Specs</h2>
+      <p>Class A motorhome built on the Ford F53 chassis. One 24-foot super slide, sleeps up to 7, and packed with everything for family travel.</p>
+    </div>
+
+    <div class="specs-hero">
+      <div class="rv-icon">🚐</div>
+      <div class="specs-title">
+        <h2>2018 Thor WindSport 29M</h2>
+        <p>Class A Motorhome · Ford F53 Chassis · Gas · 30-Amp Service</p>
+        <div class="specs-badges">
+          <span class="badge">24-ft Super Slide</span>
+          <span class="badge">Sleeps 7</span>
+          <span class="badge">30'10" Long</span>
+          <span class="badge">Ford V10</span>
+          <span class="badge">GVWR 18,000 lbs</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <!-- Chassis & Engine -->
+      <div class="card">
+        <h3>⚙️ Chassis &amp; Engine</h3>
+        <table class="spec-table">
+          <tr><td>Chassis</td><td>Ford F53 Super Duty</td></tr>
+          <tr><td>Engine</td><td>6.8L Triton V10 Gas</td></tr>
+          <tr><td>Horsepower</td><td>320 HP @ 4,750 RPM</td></tr>
+          <tr><td>Torque</td><td>460 lb-ft @ 3,250 RPM</td></tr>
+          <tr><td>Transmission</td><td>TorqShift 6-Speed Auto</td></tr>
+          <tr><td>Fuel Type</td><td>Gasoline</td></tr>
+          <tr><td>Fuel Capacity</td><td>80 gallons</td></tr>
+          <tr><td>Approx. Range</td><td>600–720 miles per tank</td></tr>
+          <tr><td>Est. MPG</td><td>7–10 MPG (highway)</td></tr>
+        </table>
+      </div>
+
+      <!-- Dimensions & Weight -->
+      <div class="card">
+        <h3>📐 Dimensions &amp; Weight</h3>
+        <table class="spec-table">
+          <tr><td>Overall Length</td><td>30' 10"</td></tr>
+          <tr><td>Overall Width</td><td>99" (8' 3")</td></tr>
+          <tr><td>Exterior Height</td><td>12' 2" (w/ roof AC)</td></tr>
+          <tr><td>GVWR</td><td>18,000 lbs</td></tr>
+          <tr><td>Dry Weight</td><td>~14,000 lbs (est. loaded)</td></tr>
+          <tr><td>GCWR (towing)</td><td>23,000 lbs</td></tr>
+          <tr><td>Hitch Rating</td><td>5,000 lbs max</td></tr>
+          <tr><td>Turning Radius</td><td>~45 ft</td></tr>
+          <tr><td>Slideout</td><td>1 super slide (24 ft, living room)</td></tr>
+        </table>
+      </div>
+
+      <!-- Water & Tanks -->
+      <div class="card">
+        <h3>💧 Tanks &amp; Utilities</h3>
+        <table class="spec-table">
+          <tr><td>Fresh Water</td><td>50 gallons</td></tr>
+          <tr><td>Gray Water</td><td>40 gallons</td></tr>
+          <tr><td>Black Water</td><td>40 gallons</td></tr>
+          <tr><td>Water Heater</td><td>6-gallon LP/Electric</td></tr>
+          <tr><td>Generator</td><td>Onan 5.5kW LP</td></tr>
+          <tr><td>LP Tanks</td><td>2 × 20 lb</td></tr>
+          <tr><td>Air Conditioning</td><td>Dual 15,000 BTU</td></tr>
+          <tr><td>Furnace</td><td>35,000 BTU Ducted</td></tr>
+        </table>
+        <hr class="divider" />
+        <div class="capacity-bar">
+          <div class="capacity-label"><span>Fresh Water (50 gal)</span><span>Fills ~2–3 days boondocking</span></div>
+          <div class="bar"><div class="bar-fill fresh" style="width:100%"></div></div>
+        </div>
+        <div class="capacity-bar" style="margin-top:10px">
+          <div class="capacity-label"><span>Gray Water (40 gal)</span><span>Sinks &amp; shower</span></div>
+          <div class="bar"><div class="bar-fill gray" style="width:80%"></div></div>
+        </div>
+        <div class="capacity-bar" style="margin-top:10px">
+          <div class="capacity-label"><span>Black Water (40 gal)</span><span>Toilet — dump every 3–5 days</span></div>
+          <div class="bar"><div class="bar-fill black" style="width:80%"></div></div>
+        </div>
+      </div>
+
+      <!-- Living & Floor Plan -->
+      <div class="card">
+        <h3>🏠 Floor Plan Highlights</h3>
+        <table class="spec-table">
+          <tr><td>Sleeping Capacity</td><td>Up to 7</td></tr>
+          <tr><td>Main Bed</td><td>King (rear private bedroom)</td></tr>
+          <tr><td>Dinette Bed</td><td>Dream Dinette (convertible)</td></tr>
+          <tr><td>Sofa Bed</td><td>Hide-a-bed sofa</td></tr>
+          <tr><td>Cabover Bunk</td><td>Powered drop-down overhead bunk</td></tr>
+          <tr><td>Seat Belts</td><td>6 total</td></tr>
+          <tr><td>Kitchen</td><td>3-burner LP range, microwave, 8 cu ft fridge, solid surface counters</td></tr>
+          <tr><td>Bathroom</td><td>Full wet bath w/ shower, toilet, sink</td></tr>
+          <tr><td>Electrical Service</td><td>30-amp (adapter needed for 50-amp pedestals)</td></tr>
+          <tr><td>Cabinets</td><td>Raised panel w/ nickel hardware &amp; glass inserts</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div style="margin-top:24px" class="grid-2">
+      <div class="alert info">
+        <div class="alert-icon">ℹ️</div>
+        <div>
+          <strong>WindSport 29M Layout for Your Family</strong>
+          The powered drop-down cabover bunk is perfect for your 6-year-old — she'll love having her own "loft." The rear king bed is your space as parents (upgrade from the Hurricane's queen). The Dream Dinette or sofa gives your 3-year-old a safe, cozy sleep spot. The 24-ft super slide dramatically opens up the living area when parked.
+        </div>
+      </div>
+      <div class="alert warning">
+        <div class="alert-icon">⚠️</div>
+        <div>
+          <strong>Know Your Payload &amp; 30-Amp Electrical</strong>
+          With a GVWR of 18,000 lbs, every pound matters. Water alone weighs 8.3 lbs/gal — a full 50-gal fresh tank adds 415 lbs. Travel with ½ tank when you can. Weigh your RV loaded at a CAT scale before any major trip. Your WindSport runs on <strong>30-amp service</strong> — always carry a 50-amp to 30-amp dogbone adapter so you can use any pedestal. Never plug directly into a 50-amp outlet without it.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SAFETY ══════════ -->
+<section class="section safety-section" id="safety">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Drive Smart</div>
+      <h2 style="color:white">Safety &amp; Driving Your 29M</h2>
+      <p style="color:rgba(255,255,255,0.7)">30+ feet of Class A means you need to think like a truck driver. These tips are specific to your RV's size, weight, and Ford chassis.</p>
+    </div>
+
+    <div class="grid-3">
+      <div class="safety-card">
+        <h3>🚦 Pre-Trip Checklist</h3>
+        <ul class="safety-list">
+          <li>Check tire pressure (cold) — front 95 PSI, rear 95 PSI typical for Ford F53</li>
+          <li>Walk all 4 tires for cracks, bulges, wear</li>
+          <li>Verify slideout is fully retracted and latched</li>
+          <li>Close all roof vents, windows, and bay doors</li>
+          <li>Check that awning is rolled up and secured</li>
+          <li>Confirm all cabinets are latched — items become projectiles at stops</li>
+          <li>Secure the refrigerator door latch for travel</li>
+          <li>Verify LP gas is OFF while driving</li>
+          <li>Check engine oil, coolant, and windshield washer fluid</li>
+          <li>Test all exterior lights (brake, turn, running)</li>
+        </ul>
+      </div>
+
+      <div class="safety-card">
+        <h3>🛣️ On the Road</h3>
+        <ul class="safety-list">
+          <li>Your RV is 30'8" — add 3–4 feet mentally for comfort while driving</li>
+          <li>Width is 8'4" — stay centered, especially in tunnels and construction zones</li>
+          <li>Max recommended speed: 65 MPH (avoid highway sway above 70)</li>
+          <li>Brake early — at 18,000 lbs you need 2–3x the stopping distance of a car</li>
+          <li>Allow 3–4 car lengths behind vehicles at highway speed</li>
+          <li>Avoid fuel stations with covered overhangs — height can be an issue</li>
+          <li>Use Truck GPS (Garmin RV or Roadtrippers) — NOT Google Maps</li>
+          <li>Watch for low bridges: your height is ~12–12.5 ft with roof AC</li>
+          <li>No LP fridge, generator, or stove running while in tunnels</li>
+          <li>Pull over every 2–2.5 hours; kids and adults need breaks</li>
+        </ul>
+      </div>
+
+      <div class="safety-card">
+        <h3>👨‍👩‍👧‍👧 Kids in the RV</h3>
+        <ul class="safety-list">
+          <li>ALL passengers — including kids — must be buckled in seats while moving. NO riding in the back while driving. This is the law in most states and a life-safety issue.</li>
+          <li>Your 3-year-old and 6-year-old must be in their car seats while the RV is in motion</li>
+          <li>Position car seats in dinette or cab-over seats — verify proper belt angles</li>
+          <li>Install childproof cabinet locks on all lower cabinets</li>
+          <li>Keep a first aid kit with kid-specific supplies accessible</li>
+          <li>Install a CO/smoke detector near the sleeping areas (check annually)</li>
+          <li>Keep a fire extinguisher within reach of the driver</li>
+          <li>Never leave kids unattended in the RV with generator running (CO risk)</li>
+        </ul>
+      </div>
+
+      <div class="safety-card">
+        <h3>⛽ Fuel &amp; Mechanical</h3>
+        <ul class="safety-list">
+          <li>Always fuel at truck stops — larger pump clearances and pull-through lanes</li>
+          <li>V10 runs hot towing or climbing — watch your temp gauge in mountains</li>
+          <li>Carry a spare serpentine belt — Ford V10 known weak point</li>
+          <li>Transmission fluid check: critical on F53 in hot/hilly conditions</li>
+          <li>Plan fuel stops every 250–300 miles (don't go below ¼ tank)</li>
+          <li>Budget $400–600 per tank at current gas prices</li>
+          <li>Keep a roadside emergency kit: triangles, jumper cables, tire inflator</li>
+        </ul>
+      </div>
+
+      <div class="safety-card">
+        <h3>🏕️ At the Campsite</h3>
+        <ul class="safety-list">
+          <li>Always level side-to-side first, then front-to-back (use leveling blocks)</li>
+          <li>Chock wheels before unhooking — the F53 has no parking pawl like a car</li>
+          <li>Use a surge protector on every 30-amp or 50-amp hookup</li>
+          <li>Check your campsite for overhead branches before extending slide</li>
+          <li>Leave generator off at quiet hours (typically 10pm–7am)</li>
+          <li>Sewer hose: use a support to prevent "stinky Slinky" droop</li>
+          <li>Black tank: keep valve CLOSED until dumping — never leave open</li>
+        </ul>
+      </div>
+
+      <div class="safety-card">
+        <h3>🌦️ Weather Awareness</h3>
+        <ul class="safety-list">
+          <li>HIGH WIND WARNING: Class A motorhomes are very wind-sensitive above 30 MPH crosswinds — pull over and wait</li>
+          <li>Your 29M has significant sail area — slow down in gusty conditions</li>
+          <li>Check weather 48 hours ahead using Weather Underground or Windy app</li>
+          <li>In severe storms: retract slide, leave awning in, chock wheels</li>
+          <li>Tornado/severe weather: exit RV and seek solid shelter — RVs are not safe in tornadoes</li>
+          <li>In desert heat: run dual AC, close blinds, limit outdoor time 11am–3pm for the kids</li>
+          <li>In freezing temps: winterize or use heat tape and keep furnace running to protect pipes</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:28px">
+      <div class="alert danger" style="max-width:100%">
+        <div class="alert-icon">🚨</div>
+        <div>
+          <strong>Most Important Safety Rule</strong>
+          Never drive your motorhome with children unrestrained in the living area, even for "just a few miles." In a crash or sudden stop, unsecured passengers become projectiles. Every seat in your 29M that has a lap/shoulder belt is a valid seating position — use them every time.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ROUTES ══════════ -->
+<section class="section" id="routes" style="background:white">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Hit the Road</div>
+      <h2>Best US RV Routes for Your Family</h2>
+      <p>Curated for a 30'8" Class A motorhome — wide roads, family-friendly stops, and stunning scenery.</p>
+    </div>
+
+    <div class="grid-2">
+
+      <div class="route-card">
+        <div class="route-header">
+          <div class="route-tag">🌅 Southwest</div>
+          <h3>The Southwest National Parks Loop</h3>
+          <div class="route-meta">
+            <span>📍 ~2,400 miles</span>
+            <span>⏱ 14–21 days</span>
+            <span>🌡 Best: Mar–May, Sep–Oct</span>
+          </div>
+        </div>
+        <div class="route-body">
+          <ul class="route-stops">
+            <li><div class="stop-dot">1</div><div class="stop-info"><strong>Las Vegas, NV</strong><span>Start here — fuel up, Red Rock Canyon day trip</span></div></li>
+            <li><div class="stop-dot">2</div><div class="stop-info"><strong>Zion National Park, UT</strong><span>Easy hikes, kid-friendly Emerald Pools trail</span></div></li>
+            <li><div class="stop-dot">3</div><div class="stop-info"><strong>Bryce Canyon, UT</strong><span>Hoodoos — magical for kids, rim trail easy</span></div></li>
+            <li><div class="stop-dot">4</div><div class="stop-info"><strong>Capitol Reef, UT</strong><span>Underrated gem — pick fresh fruit from the orchards</span></div></li>
+            <li><div class="stop-dot">5</div><div class="stop-info"><strong>Canyonlands &amp; Arches, UT</strong><span>Delicate Arch sunrise — iconic family photo moment</span></div></li>
+            <li><div class="stop-dot">6</div><div class="stop-info"><strong>Mesa Verde, CO</strong><span>Cliff dwellings — 6-year-old will love the history</span></div></li>
+            <li><div class="stop-dot">7</div><div class="stop-info"><strong>Grand Canyon South Rim, AZ</strong><span>Rim Trail is flat and stroller-friendly</span></div></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="route-card">
+        <div class="route-header">
+          <div class="route-tag">🌿 Pacific Northwest</div>
+          <h3>Oregon &amp; Washington Coast Run</h3>
+          <div class="route-meta">
+            <span>📍 ~1,800 miles</span>
+            <span>⏱ 12–16 days</span>
+            <span>🌡 Best: Jun–Sep</span>
+          </div>
+        </div>
+        <div class="route-body">
+          <ul class="route-stops">
+            <li><div class="stop-dot">1</div><div class="stop-info"><strong>Crater Lake, OR</strong><span>Deepest lake in US — stunning blue, easy rim drive</span></div></li>
+            <li><div class="stop-dot">2</div><div class="stop-info"><strong>Oregon Coast (US-101)</strong><span>Beach combing, tide pools — kids go wild here</span></div></li>
+            <li><div class="stop-dot">3</div><div class="stop-info"><strong>Cannon Beach, OR</strong><span>Haystack Rock & Goonies filming location</span></div></li>
+            <li><div class="stop-dot">4</div><div class="stop-info"><strong>Olympic National Park, WA</strong><span>Rainforest + beach in same park — magical</span></div></li>
+            <li><div class="stop-dot">5</div><div class="stop-info"><strong>North Cascades, WA</strong><span>Stunning mountain scenery, less crowded</span></div></li>
+            <li><div class="stop-dot">6</div><div class="stop-info"><strong>Mount Rainier, WA</strong><span>Wildflower meadows in summer — easy walks</span></div></li>
+            <li><div class="stop-dot">7</div><div class="stop-info"><strong>Columbia River Gorge</strong><span>Multnomah Falls — short hike, huge payoff</span></div></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="route-card">
+        <div class="route-header">
+          <div class="route-tag">🏔️ Rocky Mountains</div>
+          <h3>Colorado &amp; Wyoming Mountain Loop</h3>
+          <div class="route-meta">
+            <span>📍 ~1,600 miles</span>
+            <span>⏱ 10–14 days</span>
+            <span>🌡 Best: Jun–Sep</span>
+          </div>
+        </div>
+        <div class="route-body">
+          <ul class="route-stops">
+            <li><div class="stop-dot">1</div><div class="stop-info"><strong>Denver, CO</strong><span>Start here — Red Rocks, Denver Zoo (kids love it)</span></div></li>
+            <li><div class="stop-dot">2</div><div class="stop-info"><strong>Rocky Mountain NP, CO</strong><span>Moose, elk — Bear Lake loop is a must</span></div></li>
+            <li><div class="stop-dot">3</div><div class="stop-info"><strong>Cheyenne, WY</strong><span>Frontier Days if timing works, dinosaur museum</span></div></li>
+            <li><div class="stop-dot">4</div><div class="stop-info"><strong>Yellowstone NP, WY</strong><span>Old Faithful, bison jams, hot springs — top of list for kids</span></div></li>
+            <li><div class="stop-dot">5</div><div class="stop-info"><strong>Grand Teton NP, WY</strong><span>Best mountain scenery in the US</span></div></li>
+            <li><div class="stop-dot">6</div><div class="stop-info"><strong>Durango, CO</strong><span>Narrow gauge railroad — kids absolutely love this</span></div></li>
+            <li><div class="stop-dot">7</div><div class="stop-info"><strong>Great Sand Dunes NP, CO</strong><span>Sand sledding and Medano Creek — perfect for young kids</span></div></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="route-card">
+        <div class="route-header">
+          <div class="route-tag">🌊 Southeast</div>
+          <h3>Florida Gulf Coast &amp; Keys Explorer</h3>
+          <div class="route-meta">
+            <span>📍 ~1,400 miles</span>
+            <span>⏱ 10–14 days</span>
+            <span>🌡 Best: Nov–Apr</span>
+          </div>
+        </div>
+        <div class="route-body">
+          <ul class="route-stops">
+            <li><div class="stop-dot">1</div><div class="stop-info"><strong>Pensacola, FL</strong><span>White sand beaches, Naval Aviation Museum</span></div></li>
+            <li><div class="stop-dot">2</div><div class="stop-info"><strong>Destin / 30A, FL</strong><span>Emerald water, kid-friendly beaches, no waves</span></div></li>
+            <li><div class="stop-dot">3</div><div class="stop-info"><strong>Tampa, FL</strong><span>Busch Gardens, FL Aquarium — great for little ones</span></div></li>
+            <li><div class="stop-dot">4</div><div class="stop-info"><strong>Naples / Marco Island</strong><span>Everglades airboat tours — kids are amazed</span></div></li>
+            <li><div class="stop-dot">5</div><div class="stop-info"><strong>Everglades NP, FL</strong><span>Anhinga Trail — gators right next to the path</span></div></li>
+            <li><div class="stop-dot">6</div><div class="stop-info"><strong>Florida Keys (to Key West)</strong><span>⚠️ Tight road — take your time, 29M fits but stay alert</span></div></li>
+            <li><div class="stop-dot">7</div><div class="stop-info"><strong>Dry Tortugas NP, FL</strong><span>Ferry only — day trip from Key West, snorkeling paradise</span></div></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:24px">
+      <div class="alert success">
+        <div class="alert-icon">✅</div>
+        <div>
+          <strong>RV Route Tip for Your 29M</strong>
+          Avoid mountain passes above 10,000 ft with your V10 gas engine — it will overheat and lose significant power. Trail Ridge Road in Rocky Mountain NP (12,000 ft) is doable but go early morning before heat builds. Always check pass conditions at 511.gov for your state.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ TRIP PLANNER ══════════ -->
+<section class="section" id="planner">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Plan Your Trip</div>
+      <h2>Interactive Trip Planner</h2>
+      <p>Enter your destination and trip details — get campsite recommendations, stops, and national park info tailored to your 29M and family of four.</p>
+    </div>
+
+    <div class="planner-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Starting Location</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px">
+            <button type="button" class="quick-btn" onclick="setHome()">🏠 Home</button>
+            <button type="button" class="quick-btn gps-btn" id="gpsBtn" onclick="useGPS()">📍 Current Location</button>
+          </div>
+          <input type="text" class="form-control" id="origin" placeholder="e.g. Nashville, TN" />
+        </div>
+        <div class="form-group">
+          <label>Destination</label>
+          <input type="text" class="form-control" id="destination" placeholder="e.g. Yellowstone, WY" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Trip Start Date</label>
+          <input type="date" class="form-control" id="startDate" />
+        </div>
+        <div class="form-group">
+          <label>Trip Duration <span>(days)</span></label>
+          <input type="number" class="form-control" id="duration" placeholder="e.g. 10" min="2" max="60" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Campsite Preference</label>
+          <select class="form-control" id="campsiteType">
+            <option value="full">Full Hookups (Electric, Water, Sewer)</option>
+            <option value="partial">Partial Hookups (Electric + Water)</option>
+            <option value="state">State Park Campsites</option>
+            <option value="national">National Park Campsites</option>
+            <option value="mix">Mix of All Types</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Drive Style</label>
+          <select class="form-control" id="driveStyle">
+            <option value="easy">Easy Days (200–250 mi/day)</option>
+            <option value="moderate">Moderate (250–350 mi/day)</option>
+            <option value="push">Longer Drives (350–450 mi/day)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Special Interests <span>(select all that apply)</span></label>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+          <label style="display:flex;align-items:center;gap:6px;font-weight:400;cursor:pointer"><input type="checkbox" value="beach" /> 🏖 Beaches</label>
+          <label style="display:flex;align-items:center;gap:6px;font-weight:400;cursor:pointer"><input type="checkbox" value="hiking" /> 🥾 Hiking</label>
+          <label style="display:flex;align-items:center;gap:6px;font-weight:400;cursor:pointer"><input type="checkbox" value="wildlife" /> 🦌 Wildlife</label>
+          <label style="display:flex;align-items:center;gap:6px;font-weight:400;cursor:pointer"><input type="checkbox" value="history" /> 🏛 History</label>
+          <label style="display:flex;align-items:center;gap:6px;font-weight:400;cursor:pointer"><input type="checkbox" value="water" /> 💦 Water Play</label>
+          <label style="display:flex;align-items:center;gap:6px;font-weight:400;cursor:pointer"><input type="checkbox" value="scenic" /> 🌄 Scenic Drives</label>
+          <label style="display:flex;align-items:center;gap:6px;font-weight:400;cursor:pointer"><input type="checkbox" value="amusement" /> 🎡 Theme Parks</label>
+          <label style="display:flex;align-items:center;gap:6px;font-weight:400;cursor:pointer"><input type="checkbox" value="caves" /> 🕳 Caves &amp; Geology</label>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="generateTrip()">🗺️ Generate My Trip Plan</button>
+    </div>
+
+    <!-- Trip Result -->
+    <div class="trip-result" id="tripResult">
+      <div class="result-header">
+        <div class="result-icon">🗺️</div>
+        <div class="result-title">
+          <h3 id="resultTitle">Your Trip Plan</h3>
+          <p id="resultSubtitle">Customized for your Thor WindSport 29M · Family of 4</p>
+        </div>
+      </div>
+      <div id="resultContent"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ DESTINATIONS ══════════ -->
+<section class="section" id="destinations" style="background:white">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Family Favorites</div>
+      <h2>Top Destinations for Your Girls</h2>
+      <p>Picked for a 6-year-old and 3-year-old — wonder, wildlife, water, and space to run. Rated by RV access and kid-friendliness.</p>
+    </div>
+
+    <div class="grid-3">
+
+      <div class="dest-card">
+        <div class="dest-thumb" style="background:linear-gradient(135deg,#f39c12,#e74c3c)">🦌</div>
+        <div class="dest-body">
+          <h3>Yellowstone National Park, WY</h3>
+          <p>Old Faithful, bison herds crossing the road, rainbow hot springs. Kids are in complete awe. Book campsites 6 months in advance.</p>
+          <div class="dest-tags">
+            <span class="dest-tag">Wildlife</span>
+            <span class="dest-tag">Geysers</span>
+            <span class="dest-tag">Easy Trails</span>
+            <span class="age-chip">👧 Both Ages</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card">
+        <div class="dest-thumb" style="background:linear-gradient(135deg,#e67e22,#d35400)">🏜️</div>
+        <div class="dest-body">
+          <h3>Great Sand Dunes NP, CO</h3>
+          <p>Tallest sand dunes in North America. Kids can sled the dunes and splash in Medano Creek. Surreal and absolutely unique.</p>
+          <div class="dest-tags">
+            <span class="dest-tag">Dune Sledding</span>
+            <span class="dest-tag">Creek Play</span>
+            <span class="dest-tag">Photography</span>
+            <span class="age-chip">👧 Both Ages</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card">
+        <div class="dest-thumb" style="background:linear-gradient(135deg,#27ae60,#1e8449)">🌲</div>
+        <div class="dest-body">
+          <h3>Redwood National Park, CA</h3>
+          <p>Walking among 350-ft trees feels like a fairy tale. The Tall Trees Trail and Lady Bird Johnson Grove are perfect for little legs.</p>
+          <div class="dest-tags">
+            <span class="dest-tag">Old Growth</span>
+            <span class="dest-tag">Easy Walks</span>
+            <span class="dest-tag">Wildlife</span>
+            <span class="age-chip">👧 Both Ages</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card">
+        <div class="dest-thumb" style="background:linear-gradient(135deg,#2980b9,#1a5276)">🐊</div>
+        <div class="dest-body">
+          <h3>Everglades, FL</h3>
+          <p>Airboat rides, alligators at arm's length, rare birds. The Anhinga Trail is a paved ½-mile walk with wildlife right next to you.</p>
+          <div class="dest-tags">
+            <span class="dest-tag">Airboats</span>
+            <span class="dest-tag">Gators</span>
+            <span class="dest-tag">Birding</span>
+            <span class="age-chip">👧 Both Ages</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card">
+        <div class="dest-thumb" style="background:linear-gradient(135deg,#8e44ad,#6c3483)">🌌</div>
+        <div class="dest-body">
+          <h3>Bryce Canyon, UT</h3>
+          <p>The hoodoos look like a Dr. Seuss landscape. The rim trail is paved and easy. Stunning sunrises and some of the best dark skies for stargazing with kids.</p>
+          <div class="dest-tags">
+            <span class="dest-tag">Hoodoos</span>
+            <span class="dest-tag">Stargazing</span>
+            <span class="dest-tag">Rim Trail</span>
+            <span class="age-chip">👧 6-yr-old focused</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card">
+        <div class="dest-thumb" style="background:linear-gradient(135deg,#16a085,#1abc9c)">🦀</div>
+        <div class="dest-body">
+          <h3>Olympic National Park, WA</h3>
+          <p>Tide pools full of starfish and crabs, temperate rainforest, mountains, and beach — all in one park. Your 3-year-old will love the tide pools.</p>
+          <div class="dest-tags">
+            <span class="dest-tag">Tide Pools</span>
+            <span class="dest-tag">Rainforest</span>
+            <span class="dest-tag">Beach</span>
+            <span class="age-chip">👧 Both Ages</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card">
+        <div class="dest-thumb" style="background:linear-gradient(135deg,#c0392b,#e74c3c)">🏛️</div>
+        <div class="dest-body">
+          <h3>Durango &amp; Mesa Verde, CO</h3>
+          <p>Ride the narrow gauge steam train then explore ancient cliff dwellings. The train ride alone is worth the trip — kids are spellbound.</p>
+          <div class="dest-tags">
+            <span class="dest-tag">Steam Train</span>
+            <span class="dest-tag">History</span>
+            <span class="dest-tag">Archaeology</span>
+            <span class="age-chip">👧 6-yr-old focused</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card">
+        <div class="dest-thumb" style="background:linear-gradient(135deg,#f1c40f,#f39c12)">🏖️</div>
+        <div class="dest-body">
+          <h3>Gulf Shores, AL</h3>
+          <p>White-sand beaches with calm, warm Gulf water — perfect for a 3-year-old. Gulf State Park has excellent RV sites right near the beach.</p>
+          <div class="dest-tags">
+            <span class="dest-tag">Beach</span>
+            <span class="dest-tag">Swimming</span>
+            <span class="dest-tag">Full Hookups</span>
+            <span class="age-chip">👧 Both Ages</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card">
+        <div class="dest-thumb" style="background:linear-gradient(135deg,#2c3e50,#3498db)">🌋</div>
+        <div class="dest-body">
+          <h3>Crater Lake, OR</h3>
+          <p>The most vivid blue water you've ever seen. The rim drive is spectacular in your motorhome. Cleetwood Cove Trail lets you swim in the lake.</p>
+          <div class="dest-tags">
+            <span class="dest-tag">Scenic Drive</span>
+            <span class="dest-tag">Swimming</span>
+            <span class="dest-tag">Geology</span>
+            <span class="age-chip">👧 6-yr-old focused</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:30px">
+      <div class="alert info">
+        <div class="alert-icon">🎟️</div>
+        <div>
+          <strong>Get the America the Beautiful Annual Pass — $80/year</strong>
+          Covers all National Park entrance fees (up to $35/entry normally). With two kids and a family of four making multiple park stops, this pass pays for itself on your first big trip. Buy at any park entrance or online at recreation.gov.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ UPGRADES ══════════ -->
+<section class="section" id="upgrades">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Level Up</div>
+      <h2>Recommended Upgrades for Your 29M</h2>
+      <p>Practical improvements that make family travel safer, cooler, and more enjoyable — in order of priority.</p>
+    </div>
+
+    <div class="grid-3">
+
+      <div class="upgrade-card">
+        <div class="upgrade-header">
+          <div class="upgrade-icon safety">⚡</div>
+          <div class="upgrade-title">
+            <strong>EMS Surge Protector (50-amp)</strong>
+            <span>~$300–400 | Progressive Industries or Hughes</span>
+          </div>
+        </div>
+        <div class="upgrade-desc">Protects every circuit in your RV from power surges, low/high voltage, and miswired pedestals at campgrounds. One power spike can fry your AC units, inverter, and electronics. This is non-negotiable.</div>
+        <span class="priority-badge priority-must">Must Have First</span>
+      </div>
+
+      <div class="upgrade-card">
+        <div class="upgrade-header">
+          <div class="upgrade-icon safety">🛞</div>
+          <div class="upgrade-title">
+            <strong>Tire Pressure Monitoring System</strong>
+            <span>~$150–250 | TireMinder or TST</span>
+          </div>
+        </div>
+        <div class="upgrade-desc">Real-time tire pressure and temperature for all 6 tires displayed in your cab. A blowout on a Class A at highway speed can be catastrophic. This gives you early warning and peace of mind — especially important with young kids aboard.</div>
+        <span class="priority-badge priority-must">Must Have First</span>
+      </div>
+
+      <div class="upgrade-card">
+        <div class="upgrade-header">
+          <div class="upgrade-icon tech">📡</div>
+          <div class="upgrade-title">
+            <strong>Winegard ConnecT 2.0 WiFi Booster</strong>
+            <span>~$300 | Roof-mounted</span>
+          </div>
+        </div>
+        <div class="upgrade-desc">Pulls in distant campground WiFi signals and creates your own internal network. Kids can stream shows, you can work remotely, and navigation stays updated. Pairs with a cellular data plan for full coverage anywhere.</div>
+        <span class="priority-badge priority-high">High Priority</span>
+      </div>
+
+      <div class="upgrade-card">
+        <div class="upgrade-header">
+          <div class="upgrade-icon power">🔋</div>
+          <div class="upgrade-title">
+            <strong>200W Rooftop Solar + Lithium Battery</strong>
+            <span>~$800–1,500 | Renogy or Battle Born</span>
+          </div>
+        </div>
+        <div class="upgrade-desc">Run your 12V systems (lights, fans, water pump, fridge) without running the generator. 1–2 Battle Born 100Ah LiFePO4 batteries paired with 200W solar gives you 2–3 days of boondocking comfort. Life-changing for dry camping.</div>
+        <span class="priority-badge priority-high">High Priority</span>
+      </div>
+
+      <div class="upgrade-card">
+        <div class="upgrade-header">
+          <div class="upgrade-icon comfort">❄️</div>
+          <div class="upgrade-title">
+            <strong>AC Duct Boosters</strong>
+            <span>~$50–80 each | Easy DIY install</span>
+          </div>
+        </div>
+        <div class="upgrade-desc">Your dual 15,000 BTU ACs are adequate but airflow through the ducts is weak (common Thor complaint). Duct booster fans in the vents dramatically improve cooling distribution throughout the coach, especially in the bedroom in summer heat.</div>
+        <span class="priority-badge priority-high">High Priority</span>
+      </div>
+
+      <div class="upgrade-card">
+        <div class="upgrade-header">
+          <div class="upgrade-icon kids">🪟</div>
+          <div class="upgrade-title">
+            <strong>Blackout Curtains + Window Insulation Film</strong>
+            <span>~$100–200 | DIY install</span>
+          </div>
+        </div>
+        <div class="upgrade-desc">Your 3-year-old needs nap time — blackout curtains on cab and windshield block summer light. Reflectix insulation on the cab windows also reduces heat load by 20–30%, making your ACs work much less hard in summer destinations.</div>
+        <span class="priority-badge priority-high">High Priority</span>
+      </div>
+
+      <div class="upgrade-card">
+        <div class="upgrade-header">
+          <div class="upgrade-icon tech">📍</div>
+          <div class="upgrade-title">
+            <strong>Garmin RV GPS Navigator</strong>
+            <span>~$350–500 | Garmin RV 890</span>
+          </div>
+        </div>
+        <div class="upgrade-desc">Enter your RV's exact dimensions and it routes you around low bridges, weight-restricted roads, and narrow roads. Google Maps will send you into trouble — this won't. Worth every dollar for a 30'8" Class A.</div>
+        <span class="priority-badge priority-high">High Priority</span>
+      </div>
+
+      <div class="upgrade-card">
+        <div class="upgrade-header">
+          <div class="upgrade-icon safety">🚗</div>
+          <div class="upgrade-title">
+            <strong>Backup Camera System Upgrade</strong>
+            <span>~$200–500 | Furrion or Rear-View Safety</span>
+          </div>
+        </div>
+        <div class="upgrade-desc">Your 29M has a factory backup camera but the resolution is often poor. An upgraded wireless system with wide-angle view and side cameras gives you full visibility when backing into sites — critical with kids who may run behind the coach.</div>
+        <span class="priority-badge priority-high">High Priority</span>
+      </div>
+
+      <div class="upgrade-card">
+        <div class="upgrade-header">
+          <div class="upgrade-icon kids">🎮</div>
+          <div class="upgrade-title">
+            <strong>12V TV + Streaming Stick</strong>
+            <span>~$150–300 | Jensen or Furrion RV TV</span>
+          </div>
+        </div>
+        <div class="upgrade-desc">A 12V RV-rated TV in the living area can run off battery power without the generator. Add a Fire Stick with downloaded content and your girls have entertainment without needing shore power or burning generator fuel. Travel sanity saver.</div>
+        <span class="priority-badge priority-nice">Nice to Have</span>
+      </div>
+
+      <div class="upgrade-card">
+        <div class="upgrade-header">
+          <div class="upgrade-icon comfort">🚿</div>
+          <div class="upgrade-title">
+            <strong>Tankless Water Heater</strong>
+            <span>~$600–900 | Girard or Suburban</span>
+          </div>
+        </div>
+        <div class="upgrade-desc">Replace the 6-gallon tank water heater with an on-demand tankless unit. With two young kids and two adults, you'll run out of hot water constantly. Tankless gives unlimited hot water and uses less LP. Worth it for full-time or long-trip use.</div>
+        <span class="priority-badge priority-nice">Nice to Have</span>
+      </div>
+
+      <div class="upgrade-card">
+        <div class="upgrade-header">
+          <div class="upgrade-icon comfort">🪑</div>
+          <div class="upgrade-title">
+            <strong>Cabover Bunk Rail / Safety Net</strong>
+            <span>~$80–150 | Kidco or custom</span>
+          </div>
+        </div>
+        <div class="upgrade-desc">If your 6-year-old sleeps in the cabover bunk, a bed rail is essential. The factory setup has no rail — a fall from the cab bunk can cause serious injury. Install a safety net or rail immediately before she sleeps up there.</div>
+        <span class="priority-badge priority-must">Must Have (Safety)</span>
+      </div>
+
+      <div class="upgrade-card">
+        <div class="upgrade-header">
+          <div class="upgrade-icon safety">🌬️</div>
+          <div class="upgrade-title">
+            <strong>MaxxAir Vent Cover</strong>
+            <span>~$30–50 each | Best mod per dollar</span>
+          </div>
+        </div>
+        <div class="upgrade-desc">Replace the factory roof vent covers with MaxxAir vent covers. You can leave vents open in rain, creating passive airflow through the coach even during storms. Keeps the interior much cooler and fresher without running the AC. Cheapest upgrade with the highest impact.</div>
+        <span class="priority-badge priority-nice">Best Bang for Buck</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ QUESTIONS ══════════ -->
+<section class="section questions-section" id="questions">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag" style="background:rgba(255,255,255,0.25);color:white">Things I Need From You</div>
+      <h2 style="color:white">Questions to Personalize Your Trips</h2>
+      <p style="color:rgba(255,255,255,0.85)">Share these answers and I'll give you hyper-specific campsite bookings, routes, and destination recommendations.</p>
+    </div>
+
+    <div class="grid-2">
+
+      <div class="question-chip">
+        <div class="q-num">01</div>
+        <div class="q-text">
+          <strong>Where are you based / where do you most often start your trips?</strong>
+          <span>This lets me build routes that work from your home base and avoid backtracking.</span>
+        </div>
+      </div>
+
+      <div class="question-chip">
+        <div class="q-num">02</div>
+        <div class="q-text">
+          <strong>What season do you typically travel — or do you travel year-round?</strong>
+          <span>Weather and park availability change dramatically. Helps me avoid closed passes, extreme heat, or hurricane season.</span>
+        </div>
+      </div>
+
+      <div class="question-chip">
+        <div class="q-num">03</div>
+        <div class="q-text">
+          <strong>How many days is your typical trip? Are these long hauls or weekenders?</strong>
+          <span>A 4-day trip needs a very different plan than a 21-day loop. I want your sweet spot.</span>
+        </div>
+      </div>
+
+      <div class="question-chip">
+        <div class="q-num">04</div>
+        <div class="q-text">
+          <strong>Do you tow a vehicle (toad) behind the RV?</strong>
+          <span>A flat-tow car changes your overall length by 15–20 ft and affects which campsites you can use and how you navigate.</span>
+        </div>
+      </div>
+
+      <div class="question-chip">
+        <div class="q-num">05</div>
+        <div class="q-text">
+          <strong>What's your campsite budget per night?</strong>
+          <span>National park sites run $25–55/night. Private RV parks with full hookups run $50–100+/night. Budget shapes everything.</span>
+        </div>
+      </div>
+
+      <div class="question-chip">
+        <div class="q-num">06</div>
+        <div class="q-text">
+          <strong>Do you prefer full hookup sites only, or are you open to partial/dry camping?</strong>
+          <span>With two young kids, comfort matters. Knowing your tolerance for boondocking helps me pick the right sites.</span>
+        </div>
+      </div>
+
+      <div class="question-chip">
+        <div class="q-num">07</div>
+        <div class="q-text">
+          <strong>Any destinations you've already been to (and loved or want to revisit)?</strong>
+          <span>I won't duplicate what you've already done — I'll build on it and find what comes next.</span>
+        </div>
+      </div>
+
+      <div class="question-chip">
+        <div class="q-num">08</div>
+        <div class="q-text">
+          <strong>Do your girls have any favorites — animals, swimming, playgrounds, trains, dinosaurs?</strong>
+          <span>The more specific I know their interests, the more magical I can make each stop. Kids remember the things built for them.</span>
+        </div>
+      </div>
+
+      <div class="question-chip">
+        <div class="q-num">09</div>
+        <div class="q-text">
+          <strong>Are there any states or regions you want to prioritize or avoid?</strong>
+          <span>Maybe you've always wanted to see the Pacific Northwest, or extreme altitude gives someone trouble. Tell me.</span>
+        </div>
+      </div>
+
+      <div class="question-chip">
+        <div class="q-num">10</div>
+        <div class="q-text">
+          <strong>Have you done any of the recommended upgrades, or are you stock?</strong>
+          <span>If you don't have a TPMS or surge protector yet, I'll prioritize those in my recommendations before any long trip planning.</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ENERGY MANAGER ══════════ -->
+<section class="section" id="energy">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">On-Board Resources</div>
+      <h2>⚡ Energy &amp; Fuel Manager</h2>
+      <p>Enter what you have on board and how many nights you're staying — get a real recommendation on when to fill up gas, LP, and how long your battery will last.</p>
+    </div>
+
+    <div class="energy-grid">
+
+      <!-- LEFT: Inputs -->
+      <div>
+        <!-- Fuel -->
+        <div class="energy-card" style="margin-bottom:20px">
+          <h3>⛽ Gasoline (80-gal tank)</h3>
+          <div class="energy-input-row">
+            <label>Current fuel level</label>
+            <input type="number" id="fuelGal" value="60" min="0" max="80" oninput="calcEnergy()"> gal
+          </div>
+          <div class="gauge-wrap">
+            <div class="gauge-label"><span>Empty</span><span>Full (80 gal)</span></div>
+            <div class="gauge"><div class="gauge-fill green" id="fuelGauge" style="width:75%"></div></div>
+          </div>
+          <div class="energy-input-row" style="margin-top:14px">
+            <label>Planned driving miles</label>
+            <input type="number" id="driveMiles" value="170" min="0" oninput="calcEnergy()"> mi
+          </div>
+          <div class="energy-input-row">
+            <label>Estimated MPG</label>
+            <select id="mpg" onchange="calcEnergy()">
+              <option value="7">7 MPG (mountains/towing)</option>
+              <option value="8" selected>8 MPG (typical highway)</option>
+              <option value="9">9 MPG (flat/light load)</option>
+              <option value="10">10 MPG (best case)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- LP / Propane -->
+        <div class="energy-card" style="margin-bottom:20px">
+          <h3>🔥 Propane (2 × 20 lb tanks = 40 lbs)</h3>
+          <div class="energy-input-row">
+            <label>Tank 1 (lbs remaining)</label>
+            <input type="number" id="lp1" value="18" min="0" max="20" oninput="calcEnergy()"> lbs
+          </div>
+          <div class="energy-input-row">
+            <label>Tank 2 (lbs remaining)</label>
+            <input type="number" id="lp2" value="20" min="0" max="20" oninput="calcEnergy()"> lbs
+          </div>
+          <div class="gauge-wrap">
+            <div class="gauge-label"><span>Empty (0 lbs)</span><span>Full (40 lbs)</span></div>
+            <div class="gauge"><div class="gauge-fill green" id="lpGauge" style="width:95%"></div></div>
+          </div>
+          <div class="energy-input-row" style="margin-top:14px">
+            <label>Generator hrs/day</label>
+            <select id="genHrs" onchange="calcEnergy()">
+              <option value="0">0 hrs — full hookups</option>
+              <option value="2">2 hrs — minimal use</option>
+              <option value="4" selected>4 hrs — moderate (charging + TV)</option>
+              <option value="6">6 hrs — heavy (AC + cooking)</option>
+              <option value="8">8 hrs — no hookups, hot weather</option>
+            </select>
+          </div>
+          <div class="energy-input-row">
+            <label>Run furnace at night?</label>
+            <select id="furnace" onchange="calcEnergy()">
+              <option value="0">No (warm weather / electric heat)</option>
+              <option value="1" selected>Light use (~1 hr/night)</option>
+              <option value="2">Moderate (~2 hrs/night)</option>
+              <option value="4">Heavy (~4 hrs/night, cold weather)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Battery -->
+        <div class="energy-card">
+          <h3>🔋 House Battery</h3>
+          <div class="energy-input-row">
+            <label>Current setup</label>
+            <select id="battSetup" onchange="calcEnergy()">
+              <option value="100" selected>Current: 1 × 100Ah AGM</option>
+              <option value="200">Planned: 2 × 100Ah AGM</option>
+              <option value="300">Future: 3 × 100Ah (your goal)</option>
+            </select>
+          </div>
+          <div class="energy-input-row">
+            <label>Battery charge %</label>
+            <input type="number" id="battPct" value="100" min="0" max="100" oninput="calcEnergy()"> %
+          </div>
+          <div class="gauge-wrap">
+            <div class="gauge-label"><span>Dead (0%)</span><span>Full (100%)</span></div>
+            <div class="gauge"><div class="gauge-fill green" id="battGauge" style="width:100%"></div></div>
+          </div>
+          <p style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-top:10px">
+            AGM rule: never discharge below 50% — doing so permanently damages the battery. Your usable capacity right now is 50Ah. Future 300Ah bank = 150Ah usable.
+          </p>
+        </div>
+      </div>
+
+      <!-- RIGHT: Results -->
+      <div>
+        <div class="energy-card" style="margin-bottom:20px">
+          <h3>📅 Trip Details</h3>
+          <div class="energy-input-row">
+            <label>Nights staying</label>
+            <input type="number" id="nights" value="3" min="1" max="30" oninput="calcEnergy()">
+          </div>
+          <div class="energy-input-row">
+            <label>Site type</label>
+            <select id="siteType" onchange="calcEnergy()">
+              <option value="full">Full hookups (electric+water+sewer)</option>
+              <option value="partial">Partial (electric+water only)</option>
+              <option value="dry" selected>Dry camping / no hookups</option>
+            </select>
+          </div>
+          <div class="energy-input-row">
+            <label>Weather</label>
+            <select id="weather" onchange="calcEnergy()">
+              <option value="cool" selected>Cool / mild (no AC needed)</option>
+              <option value="warm">Warm (occasional AC)</option>
+              <option value="hot">Hot (AC running most of day)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Results panel -->
+        <div class="energy-card">
+          <h3>📊 Resource Forecast <span class="live-badge"><span class="live-dot"></span>Live</span></h3>
+
+          <div class="result-panel">
+            <div class="result-row">
+              <span>⛽ Fuel after driving</span>
+              <span id="r-fuelLeft">—</span>
+            </div>
+            <div class="result-row">
+              <span>⛽ Miles of range left after trip</span>
+              <span id="r-fuelRange">—</span>
+            </div>
+            <div class="result-row">
+              <span>🔥 LP needed (trip total)</span>
+              <span id="r-lpNeeded">—</span>
+            </div>
+            <div class="result-row">
+              <span>🔥 LP remaining at end</span>
+              <span id="r-lpLeft">—</span>
+            </div>
+            <div class="result-row">
+              <span>🔥 Generator run time available</span>
+              <span id="r-genTime">—</span>
+            </div>
+            <div class="result-row">
+              <span>🔋 Battery lasts (no generator)</span>
+              <span id="r-battHrs">—</span>
+            </div>
+            <div class="result-row">
+              <span>🔋 Status at end of trip</span>
+              <span id="r-battEnd">—</span>
+            </div>
+          </div>
+
+          <div class="reco-box green" id="recoBox">
+            Enter your numbers on the left and this panel updates instantly.
+          </div>
+
+          <div style="margin-top:20px">
+            <p style="font-size:0.78rem;color:rgba(255,255,255,0.4);line-height:1.6">
+              <strong style="color:rgba(255,255,255,0.6)">Reference — LP burn rates:</strong><br>
+              Onan 5.5kW generator: ~0.45 gal/hr (3.75 lbs/hr)<br>
+              Furnace (35,000 BTU): ~0.40 lbs/hr when firing<br>
+              LP fridge: ~0.10 lbs/hr · Water heater: ~0.05 lbs/hr<br>
+              1 lb LP ≈ 0.236 gal · Full 20-lb tank ≈ 4.7 gal
+            </p>
+          </div>
+        </div>
+
+        <!-- Future upgrade note -->
+        <div class="energy-card" style="margin-top:20px">
+          <h3>🚀 Your Upgrade Path</h3>
+          <div style="font-size:0.85rem;color:rgba(255,255,255,0.75);line-height:1.8">
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.08)">
+              <span>Now</span><span style="color:#f1c40f">1 × 100Ah AGM · 50Ah usable · Generator dependent</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.08)">
+              <span>+2 batteries</span><span style="color:#2ecc71">3 × 100Ah · 150Ah usable · 2–3 nights light dry camping</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.08)">
+              <span>+2 solar panels (200W)</span><span style="color:#2ecc71">Recharge 40–60Ah/day in sun · LP use drops ~60%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0">
+              <span>Full build</span><span style="color:#3498db">300Ah + 200W solar · True dry camping capable</span>
+            </div>
+          </div>
+          <p style="margin-top:14px;font-size:0.78rem;color:rgba(255,255,255,0.4)">Use the battery selector above to preview how your numbers change with each upgrade.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Campsite Finder -->
+    <div class="campsite-finder-card">
+      <h3>🔍 Find Available Campsites — Live Links</h3>
+      <p>These open the official booking sites filtered for your RV size. Availability is real-time on their servers — no computer needed, works from your phone on the road.</p>
+      <div class="finder-grid">
+        <a class="finder-btn" href="https://www.recreation.gov/camping/campgrounds?q=&size=30&hookup=electric" target="_blank" rel="noopener">
+          <span class="fb-icon">🏕️</span>
+          <span class="fb-label">Recreation.gov</span>
+          <span class="fb-sub">National Parks &amp; Federal Sites</span>
+        </a>
+        <a class="finder-btn" href="https://campspot.com/search?rvLength=31&hookupType=full" target="_blank" rel="noopener">
+          <span class="fb-icon">🔌</span>
+          <span class="fb-label">Campspot</span>
+          <span class="fb-sub">Private RV Parks · Full Hookups</span>
+        </a>
+        <a class="finder-btn" href="https://www.reserveamerica.com/explore/search?lengthOfUnit=31" target="_blank" rel="noopener">
+          <span class="fb-icon">🌲</span>
+          <span class="fb-label">ReserveAmerica</span>
+          <span class="fb-sub">State Parks Nationwide</span>
+        </a>
+        <a class="finder-btn" href="https://rvparky.com/parks?state=NC&hookup=full" target="_blank" rel="noopener">
+          <span class="fb-icon">⚡</span>
+          <span class="fb-label">RVparky</span>
+          <span class="fb-sub">Searchable by hookup &amp; state</span>
+        </a>
+        <a class="finder-btn" href="https://www.hipcamp.com/en-US/camping/rv" target="_blank" rel="noopener">
+          <span class="fb-icon">🌄</span>
+          <span class="fb-label">Hipcamp</span>
+          <span class="fb-sub">Unique &amp; farm sites</span>
+        </a>
+        <a class="finder-btn" href="https://www.goodsam.com/campgrounds-rv-parks/" target="_blank" rel="noopener">
+          <span class="fb-icon">😊</span>
+          <span class="fb-label">Good Sam</span>
+          <span class="fb-sub">Member discounts · 10% off nightly</span>
+        </a>
+      </div>
+      <div style="margin-top:16px;padding:14px 16px;background:rgba(255,255,255,0.05);border-radius:10px;font-size:0.82rem;color:rgba(255,255,255,0.55)">
+        💡 <strong style="color:rgba(255,255,255,0.75)">True real-time availability</strong> (like checking if a specific site opened up mid-trip) requires a paid API integration with Recreation.gov and Campspot. That's a future upgrade we can build — it would let this app show live site availability right here without leaving the page.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<div class="footer">
+  <p>Built for the <strong>Badalamenti Family</strong> · 2018 Thor WindSport 29M · Family of Four 🚐</p>
+  <p style="margin-top:6px">Tell me your destination and I'll plan your perfect trip — campsites, stops, parks, and everything in between.</p>
+</div>
+
+<!-- ══════════ SCRIPT ══════════ -->
+<script>
+  // ── HOME & GPS SHORTCUTS ──
+  const HOME_ADDRESS = '195 Red Hawk Place, Smithfield, NC';
+
+  function setHome() {
+    document.getElementById('origin').value = HOME_ADDRESS;
+  }
+
+  function useGPS() {
+    const btn = document.getElementById('gpsBtn');
+    if (!navigator.geolocation) {
+      alert('Your browser does not support location access. Try opening this page in Safari or Chrome on your phone.');
+      return;
+    }
+    btn.textContent = '⏳ Getting location…';
+    btn.classList.add('loading');
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        try {
+          const res  = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+          );
+          const data = await res.json();
+          const addr = data.address;
+          const city  = addr.city || addr.town || addr.village || addr.county || '';
+          const state = addr.state || '';
+          document.getElementById('origin').value = city && state ? `${city}, ${state}` : `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+        } catch {
+          document.getElementById('origin').value = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+        }
+        btn.innerHTML = '📍 Current Location';
+        btn.classList.remove('loading');
+      },
+      (err) => {
+        btn.innerHTML = '📍 Current Location';
+        btn.classList.remove('loading');
+        if (err.code === 1) alert('Location access was denied. On iPhone: Settings → Safari → Location → Allow.');
+        else alert('Could not get your location. Try again or type it in manually.');
+      },
+      { timeout: 10000, maximumAge: 60000 }
+    );
+  }
+
+  // ── ENERGY CALCULATOR ──
+  function calcEnergy() {
+    const fuel     = parseFloat(document.getElementById('fuelGal').value)   || 0;
+    const miles    = parseFloat(document.getElementById('driveMiles').value) || 0;
+    const mpg      = parseFloat(document.getElementById('mpg').value)        || 8;
+    const lp1      = parseFloat(document.getElementById('lp1').value)        || 0;
+    const lp2      = parseFloat(document.getElementById('lp2').value)        || 0;
+    const genHrs   = parseFloat(document.getElementById('genHrs').value)     || 0;
+    const furnace  = parseFloat(document.getElementById('furnace').value)    || 0;
+    const nights   = parseFloat(document.getElementById('nights').value)     || 1;
+    const battAh   = parseFloat(document.getElementById('battSetup').value)  || 100;
+    const battPct  = parseFloat(document.getElementById('battPct').value)    || 100;
+    const siteType = document.getElementById('siteType').value;
+    const weather  = document.getElementById('weather').value;
+
+    // ── fuel ──
+    const fuelUsedDriving = miles / mpg;
+    const fuelAfterDrive  = Math.max(0, fuel - fuelUsedDriving);
+    const milesRangeLeft  = fuelAfterDrive * mpg;
+
+    // ── LP burn rates (lbs/hr) ──
+    const genBurn     = 3.75;  // Onan 5.5kW at typical load
+    const furnaceBurn = 0.40;  // per firing hour
+    const idleBurn    = 0.15;  // fridge + water heater base draw
+
+    // adjust generator hours for hookup type
+    let effectiveGenHrs = genHrs;
+    if (siteType === 'full')    effectiveGenHrs = Math.min(genHrs, 1); // barely need it
+    if (siteType === 'partial') effectiveGenHrs = Math.min(genHrs, 2);
+
+    // weather AC penalty (extra LP/gas via gen)
+    const acPenalty = weather === 'hot' ? 1.5 : weather === 'warm' ? 0.5 : 0;
+
+    const lpPerNight = (effectiveGenHrs + acPenalty) * genBurn
+                     + furnace * furnaceBurn
+                     + idleBurn * 24;
+    const lpTotal    = lpPerNight * nights;
+    const lpOnBoard  = lp1 + lp2;
+    const lpLeft     = Math.max(0, lpOnBoard - lpTotal);
+    const lpPct      = Math.min(100, (lpOnBoard / 40) * 100);
+
+    // how many hours of generator the remaining LP can power
+    const genTimeAvail = lpOnBoard / genBurn;
+
+    // ── battery ──
+    // AGM: 50% DoD max usable
+    const usableAh    = battAh * 0.50;
+    const currentAh   = usableAh * (battPct / 100);
+    // nightly 12V draw with no shore power: lights, pump, fan, phone charging ~15Ah
+    const nightlyDraw = siteType === 'full' ? 5 : 15;
+    const battNights  = currentAh / nightlyDraw;
+    const battLeftPct = Math.max(0, ((currentAh - nightlyDraw * nights) / usableAh) * 100);
+
+    // ── update gauges ──
+    setGauge('fuelGauge', (fuel / 80) * 100);
+    setGauge('lpGauge',   lpPct);
+    setGauge('battGauge', battPct);
+
+    // ── populate results ──
+    const fuelColor = fuelAfterDrive > 20 ? 'ok' : fuelAfterDrive > 10 ? 'warn' : 'bad';
+    const lpColor   = lpLeft > 10 ? 'ok' : lpLeft > 4 ? 'warn' : 'bad';
+    const battColor = battNights >= nights ? 'ok' : battNights >= nights * 0.5 ? 'warn' : 'bad';
+
+    setText('r-fuelLeft',  `${fuelAfterDrive.toFixed(1)} gal`, fuelColor);
+    setText('r-fuelRange', `~${Math.round(milesRangeLeft)} miles`, fuelColor);
+    setText('r-lpNeeded',  `${lpTotal.toFixed(1)} lbs`, lpTotal <= lpOnBoard ? 'ok' : 'bad');
+    setText('r-lpLeft',    `${lpLeft.toFixed(1)} lbs`, lpColor);
+    setText('r-genTime',   `~${genTimeAvail.toFixed(0)} hrs total`, lpColor);
+    setText('r-battHrs',   `~${battNights.toFixed(1)} nights`, battColor);
+    setText('r-battEnd',   battLeftPct > 20 ? `${battLeftPct.toFixed(0)}% remaining` : 'Needs charge!',
+                           battLeftPct > 20 ? 'ok' : 'bad');
+
+    // ── recommendation ──
+    const issues = [];
+    const tips   = [];
+
+    if (fuelAfterDrive < 20)
+      issues.push(`⛽ Fuel will be low after driving (${fuelAfterDrive.toFixed(1)} gal left). Fill up before or during the trip — don't go below ¼ tank (20 gal).`);
+    else
+      tips.push(`⛽ Fuel looks good for the drive. ${fuelAfterDrive.toFixed(1)} gal remaining after ${miles} miles.`);
+
+    if (lpTotal > lpOnBoard)
+      issues.push(`🔥 You will RUN OUT of propane mid-trip. You need ${lpTotal.toFixed(1)} lbs but only have ${lpOnBoard} lbs. Fill both tanks before you leave.`);
+    else if (lpLeft < 8)
+      issues.push(`🔥 LP will be low at end of trip (${lpLeft.toFixed(1)} lbs left). Fill up on the road if you pass an LP station, or run generator less.`);
+    else
+      tips.push(`🔥 Propane is sufficient for ${nights} nights. ${lpLeft.toFixed(1)} lbs remaining at end.`);
+
+    if (battNights < nights && siteType === 'dry')
+      issues.push(`🔋 Your 100Ah battery (50Ah usable) won't last ${nights} nights of dry camping without generator charging. Run the generator 1–2 hrs each morning to top it back up.`);
+    else if (siteType !== 'full')
+      tips.push(`🔋 Battery should last with generator top-ups. Run generator ~2 hrs/morning to keep it above 50%.`);
+
+    if (siteType === 'full')
+      tips.push(`🔌 Full hookups — you won't need your generator or much propane. Great choice for this trip length.`);
+
+    const box = document.getElementById('recoBox');
+    if (issues.length) {
+      box.className = issues.length > 1 ? 'reco-box red' : 'reco-box yellow';
+      box.innerHTML = `<strong>${issues.length > 1 ? '⚠️ Action Required Before You Go' : '⚠️ One Thing to Watch'}</strong>${issues.join('<br><br>')}${tips.length ? '<br><br>' + tips.join('<br>') : ''}`;
+    } else {
+      box.className = 'reco-box green';
+      box.innerHTML = `<strong>✅ You're Good to Go for ${nights} Night${nights>1?'s':''}</strong>${tips.join('<br>')}`;
+    }
+  }
+
+  function setGauge(id, pct) {
+    const el = document.getElementById(id);
+    const p  = Math.min(100, Math.max(0, pct));
+    el.style.width = p + '%';
+    el.className   = 'gauge-fill ' + (p > 50 ? 'green' : p > 25 ? 'yellow' : 'red');
+  }
+
+  function setText(id, val, cls) {
+    const el = document.getElementById(id);
+    el.textContent  = val;
+    el.className    = cls || '';
+  }
+
+  // run on load
+  document.addEventListener('DOMContentLoaded', calcEnergy);
+
+  // ── NAV SCROLL FIX ──
+  // Fix nav tab scrolling — accounts for sticky nav height offset
+  document.querySelectorAll('.nav a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        const navHeight = document.querySelector('.nav').offsetHeight;
+        const top = target.getBoundingClientRect().top + window.scrollY - navHeight - 8;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Pre-loaded destination data for the trip planner
+  const destinationData = {
+    yellowstone: {
+      title: "Yellowstone National Park, WY",
+      emoji: "🦌",
+      description: "One of the most iconic family destinations in the US. Book as early as possible — campsites fill up 6 months ahead.",
+      campsites: [
+        {
+          name: "Fishing Bridge RV Park (Yellowstone)",
+          type: "national",
+          label: "National Park",
+          hookups: "Electric + Water (no sewer in-park)",
+          pullThru: "Yes — fits 35+ ft",
+          rate: "$50–55/night",
+          desc: "The only RV hookup site inside Yellowstone. Right on the lake. Book at recreation.gov 6 months out."
+        },
+        {
+          name: "Grand Teton/Yellowstone KOA — West Yellowstone",
+          type: "rv",
+          label: "RV Resort",
+          hookups: "Full hookups (50-amp)",
+          pullThru: "Yes",
+          rate: "$75–110/night",
+          desc: "Just outside the west entrance. Pool, playground, laundry — ideal family base camp. Pets welcome."
+        },
+        {
+          name: "Headwaters Lodge & Cabins at Flagg Ranch",
+          type: "private",
+          label: "Concessionaire",
+          hookups: "Full hookups",
+          pullThru: "Yes",
+          rate: "$55–70/night",
+          desc: "Between Yellowstone and Grand Teton — perfect mid-point. Quiet, scenic, family friendly."
+        }
+      ],
+      stops: [
+        { name: "Old Faithful Geyser", kid: "Both ages", detail: "Watch the eruption then walk the boardwalk loop (~1.5 mi, flat, paved)" },
+        { name: "Grand Prismatic Spring", kid: "Both ages", detail: "Most colorful thermal feature in the park — short boardwalk" },
+        { name: "Lamar Valley", kid: "Both ages", detail: "Best wildlife viewing: bison herds, wolves, bears. Go at dawn." },
+        { name: "Artists Paintpots Trail", kid: "Both ages", detail: "Bubbling mud pots — kids love the sounds and colors. 1.1 mi easy loop." },
+        { name: "Boiling River", kid: "6-yr-old+", detail: "Natural hot spring meeting the river — swimming allowed (check seasonal)" }
+      ],
+      parks: "Grand Teton NP is only 60 miles south — easily combined into a 2-week trip. Jenny Lake and the Cathedral Group are stunning and very accessible.",
+      warning: "Check your route: Yellowstone roads have weight and length restrictions on some loops. Your 29M is fine on the main Grand Loop Road. Avoid driving Beartooth Highway with the full coach — it's spectacular but very challenging."
+    },
+    zion: {
+      title: "Zion National Park, UT",
+      emoji: "🏔️",
+      description: "Towering red cliffs, emerald pools, and the famous Narrows. Great for families — the main canyon shuttle removes driving stress.",
+      campsites: [
+        {
+          name: "Zion Canyon Campground (Springdale, UT)",
+          type: "private",
+          label: "Private",
+          hookups: "Full hookups (50-amp)",
+          pullThru: "Yes",
+          rate: "$65–90/night",
+          desc: "Just outside the park gate — walk to the park shuttle. Pool on site. Your 29M fits easily."
+        },
+        {
+          name: "South Campground (Inside Zion)",
+          type: "national",
+          label: "National Park",
+          hookups: "No hookups",
+          pullThru: "Select sites",
+          rate: "$20–35/night",
+          desc: "Inside the canyon — beautiful location. Electric sites available at Watchman Campground (nearby). Book at recreation.gov."
+        },
+        {
+          name: "Hurricane / St. George Area KOA",
+          type: "rv",
+          label: "RV Resort",
+          hookups: "Full hookups",
+          pullThru: "Yes",
+          rate: "$60–80/night",
+          desc: "30 minutes from the park — full amenities, large sites. Good base if Springdale sites are full."
+        }
+      ],
+      stops: [
+        { name: "Emerald Pools Trail (Lower)", kid: "Both ages", detail: "1.2 mi paved/gravel — waterfall and pools. Perfect for young kids." },
+        { name: "Pa'rus Trail", kid: "Both ages", detail: "Completely paved 3.5 mi — stroller-friendly, runs along the river" },
+        { name: "Canyon Overlook Trail", kid: "6-yr-old", detail: "1 mi with some steps — incredible views, worth the effort" },
+        { name: "Junior Ranger Program", kid: "Both ages", detail: "Pick up the booklet at the visitor center — kids earn a badge" },
+        { name: "Springdale Town", kid: "Both ages", detail: "Great ice cream shops and local restaurants after hiking days" }
+      ],
+      parks: "Bryce Canyon is 86 miles east — perfect 2-day side trip. The Zion-Bryce combination is one of the best RV loops in America.",
+      warning: "Zion is extremely crowded June–August. Go May or September for shorter lines at the shuttle and cooler temps for little ones. Private vehicles cannot drive the main canyon — take the free shuttle from Springdale."
+    },
+    florida: {
+      title: "Florida Gulf Coast",
+      emoji: "🌊",
+      description: "Calm, warm Gulf water, white sand beaches, and excellent full-hookup RV parks. Perfect winter escape for northern families.",
+      campsites: [
+        {
+          name: "Gulf State Park Campground, Gulf Shores, AL",
+          type: "state",
+          label: "State Park",
+          hookups: "Full hookups (50-amp)",
+          pullThru: "Yes",
+          rate: "$40–55/night",
+          desc: "Walk to the beach. Excellent state park facilities. Book through the Alabama state park reservation system. One of the best RV beach campgrounds in the South."
+        },
+        {
+          name: "Destin West RV Resort, Fort Walton, FL",
+          type: "rv",
+          label: "RV Resort",
+          hookups: "Full hookups (50-amp)",
+          pullThru: "Yes",
+          rate: "$90–130/night",
+          desc: "Direct Gulf access, pool, beach. Premium but worth it for young kids. Your girls will not want to leave."
+        },
+        {
+          name: "Everglades National Park — Long Pine Key",
+          type: "national",
+          label: "National Park",
+          hookups: "No hookups (dry camping)",
+          pullThru: "Most sites",
+          rate: "$20/night",
+          desc: "Generator-friendly, quiet, great for stargazing. Good option if you have solar/battery. Stunning natural setting."
+        }
+      ],
+      stops: [
+        { name: "30A Beaches (South Walton, FL)", kid: "Both ages", detail: "Sugarwhite sand, no waves, crystal clear water — a 3-year-old's dream." },
+        { name: "Florida Aquarium, Tampa", kid: "Both ages", detail: "Excellent indoor option for a rainy day — sharks, rays, otters" },
+        { name: "Everglades Airboat Tour", kid: "Both ages", detail: "Book with Everglades Safari Park — 30-min rides, gators everywhere" },
+        { name: "Big Cypress National Preserve", kid: "Both ages", detail: "Drive the Loop Road slowly — birds, gators, cypress swamps" },
+        { name: "Key West Day Trip", kid: "6-yr-old", detail: "Park the coach in Marathon — rent a car or take the bus to Key West" }
+      ],
+      parks: "Dry Tortugas National Park is 70 miles west of Key West by ferry — day trip only, but incredible snorkeling and a historic fort. Biscayne National Park near Miami is 95% underwater — rent a glass-bottom boat tour.",
+      warning: "Florida Keys driving: US-1 from Homestead to Key West is doable in your 29M but stressful — narrow bridges, no shoulders, strong crosswinds. Do it slow, preferably mid-week, and never in wind advisories."
+    },
+    grandcanyon: {
+      title: "Grand Canyon, AZ",
+      emoji: "🏜️",
+      description: "The most awe-inspiring place in the United States. Even a 3-year-old standing at the rim will remember this moment.",
+      campsites: [
+        {
+          name: "Trailer Village (South Rim, inside park)",
+          type: "national",
+          label: "National Park",
+          hookups: "Full hookups",
+          pullThru: "Yes — designed for RVs",
+          rate: "$45–55/night",
+          desc: "The only full-hookup RV campground inside Grand Canyon NP. Book months in advance at recreation.gov. Walk to the rim from your site."
+        },
+        {
+          name: "Grand Canyon Railway RV Park, Williams, AZ",
+          type: "rv",
+          label: "RV Resort",
+          hookups: "Full hookups (50-amp)",
+          pullThru: "Yes",
+          rate: "$55–75/night",
+          desc: "60 miles south of the rim. Take the historic Grand Canyon Railway train to the canyon — your kids will love the train ride AS MUCH as the canyon."
+        },
+        {
+          name: "Valle RV Campground, Valle, AZ",
+          type: "private",
+          label: "Private",
+          hookups: "Electric + Water",
+          pullThru: "Yes",
+          rate: "$30–45/night",
+          desc: "26 miles from the South Rim. Basic but well-located and budget-friendly."
+        }
+      ],
+      stops: [
+        { name: "South Rim Village & Visitor Center", kid: "Both ages", detail: "Start here — Junior Ranger program, exhibits, first rim views" },
+        { name: "Rim Trail (Paved)", kid: "Both ages", detail: "Flat, paved trail runs along the rim — stroller-accessible for 2 miles" },
+        { name: "Mather Point", kid: "Both ages", detail: "Most iconic viewpoint — safest rim access, fenced in areas. Perfect family photo." },
+        { name: "Grand Canyon Railway", kid: "Both ages", detail: "Historic steam/diesel train from Williams. 2hr ride each way — kids love it." },
+        { name: "Desert View Watchtower", kid: "Both ages", detail: "25 miles east on Desert View Drive — native history, panoramic views" }
+      ],
+      parks: "Monument Valley is 180 miles east — a stunning half-day drive with iconic sandstone buttes. Antelope Canyon is 130 miles east near Page, AZ — book guided tours in advance. Page also has Lake Powell and Horseshoe Bend (short easy walk).",
+      warning: "Never hike below the rim with young children — the trail descends 5,000 ft and the return is brutal in heat. The rim is enough for this trip. Keep your 3-year-old on a wrist leash near the unfenced edges."
+    },
+    mountairy: {
+      title: "Mount Airy, NC (Mayberry!)",
+      emoji: "🎬",
+      description: "Andy Griffith's real hometown — the inspiration for Mayberry. Small-town charm, Pilot Mountain right next door, and easy family-friendly weekend vibes. Only ~2.5 hours from Smithfield.",
+      campsites: [
+        {
+          name: "Mayberry Campground — 114 Byron Bunker Ln, Mount Airy, NC",
+          type: "rv",
+          label: "RV Park",
+          hookups: "Full hookups · 30/50/20 amp · Cable TV · WiFi",
+          pullThru: "Yes — pull-throughs available, big-rig friendly",
+          rate: "$45–55/night",
+          desc: "Best base camp for this trip. 95 sites, gravel pads, rated 9.2/10. About 4–5 miles from downtown. Clean, friendly staff. Book ahead on weekends — it fills up fast. Call (336) 789-6199 or book at mayberrycampground.com."
+        },
+        {
+          name: "Greystone RV Park — Pinnacle, NC (near Pilot Mountain)",
+          type: "rv",
+          label: "RV Park",
+          hookups: "Full hookups · 30/50 amp",
+          pullThru: "Yes",
+          rate: "$40–50/night",
+          desc: "Right near Pilot Mountain State Park with views of the mountain from your site. Great if you want to prioritize the park over downtown Mount Airy. About 12 miles from Main Street."
+        },
+        {
+          name: "Veterans Memorial Park Campground — Mount Airy, NC",
+          type: "state",
+          label: "Municipal Park",
+          hookups: "Full hookups available",
+          pullThru: "Some sites",
+          rate: "$30–40/night",
+          desc: "Budget-friendly municipal campground right in town. Check veteransparkmtairy.org for availability. Convenient location means you can walk or drive a very short distance to attractions."
+        }
+      ],
+      stops: [
+        { name: "Pilot Mountain State Park — Fiddlehead Trail", kid: "Both ages — perfect for 3-yr-old", detail: "Only 0.4 miles with pages of a children's picture book posted along the trail (StoryWalk). Your 3-year-old will love stopping to read each page. Flat and easy." },
+        { name: "Pilot Mountain State Park — Grassy Ridge Trail", kid: "Both ages", detail: "1.5 miles through lowland forest, easy grade. Look for butterflies and birds. Combine with Fiddlehead for a solid morning outing. Go early — parking lot fills up by 10am on weekends." },
+        { name: "Pilot Mountain Summit Overlook", kid: "6-yr-old loved it", detail: "Drive up to the upper parking area for jaw-dropping views of the piedmont. The knob rises 2,400 ft — looks like something from a fairy tale. Short paved walk from parking." },
+        { name: "Andy Griffith Museum", kid: "6-yr-old focused", detail: "World's largest Andy Griffith memorabilia collection. $8 adults / $6 kids. Your 6-yr-old will enjoy the squad car and props. 3-yr-old will be more interested in running around outside." },
+        { name: "Squad Car Tour from Wally's Service Station", kid: "Both ages", detail: "Pile all 4 of you into a replica of Barney Fife's squad car for a 30–45 min guided cruise of Mayberry sights. Fits a family of 4 perfectly. Fun, cheesy, and memorable. Book ahead on weekends." },
+        { name: "Snappy Lunch — 125 N Main St", kid: "Both ages", detail: "Famous diner from the Andy Griffith Show. Known for the pork chop sandwich. Cash only. Gets very busy — go before 11am or after 1:30pm to beat the line with little ones." },
+        { name: "Mount Airy Greenway & Playgrounds", kid: "Both ages — 3-yr-old especially", detail: "Paved greenway with playgrounds along it. Perfect for letting the girls burn energy after a morning of sightseeing. Free." },
+        { name: "Floyd's City Barber Shop — 129 N Main St", kid: "Both ages", detail: "The actual real-life barber shop that inspired Floyd's on the show. Stop in, take a photo. Still operates as a real shop." }
+      ],
+      parks: "Pilot Mountain State Park is only 14 miles from downtown Mount Airy — your biggest outdoor stop of the weekend. Hanging Rock State Park is 25 miles southeast and worth a mention for future visits (waterfall hike is beautiful but too strenuous for a 3-yr-old). Blue Ridge Parkway access is about 35 miles west near Galax, VA — a gorgeous scenic drive in your WindSport if you have an extra afternoon.",
+      warning: "Route from Smithfield: Take I-40 W to US-421 N straight into Mount Airy — about 170 miles, 2.5 hours. Easy drive on wide interstate highways, no issues for your 29M. Avoid NC-89 into town — it's narrow with tight turns. At Pilot Mountain, the upper parking lot is manageable for your coach but tight on busy weekends. Consider parking the RV at camp and driving a regular vehicle or calling a rideshare to the trailhead on peak days."
+    },
+    rocky: {
+      title: "Rocky Mountain National Park, CO",
+      emoji: "🏔️",
+      description: "Moose, elk, bighorn sheep, and stunning alpine scenery — all within 90 minutes of Denver.",
+      campsites: [
+        {
+          name: "Moraine Park Campground (Inside RMNP)",
+          type: "national",
+          label: "National Park",
+          hookups: "Electric only",
+          pullThru: "Some sites",
+          rate: "$30–40/night",
+          desc: "Best campground inside the park. Meadow setting with elk wandering through at dawn. Book at recreation.gov 6 months ahead."
+        },
+        {
+          name: "Estes Park KOA",
+          type: "rv",
+          label: "RV Resort",
+          hookups: "Full hookups (50-amp)",
+          pullThru: "Yes",
+          rate: "$80–110/night",
+          desc: "Great base camp 5 miles from the park entrance. Pool, playground, mountain views. Your girls will love the location."
+        },
+        {
+          name: "Carter Lake Campground (Larimer County)",
+          type: "state",
+          label: "County Park",
+          hookups: "Electric + Water",
+          pullThru: "Some sites",
+          rate: "$28–38/night",
+          desc: "45 min from the park — budget-friendly with a reservoir for kayaking and fishing. Less crowded than Estes Park."
+        }
+      ],
+      stops: [
+        { name: "Bear Lake Trailhead", kid: "Both ages", detail: "0.6 mi loop around the lake — completely flat, accessible, stunning views" },
+        { name: "Sprague Lake", kid: "Both ages", detail: "0.5 mi accessible loop — best spot to see elk reflections in the water at dawn" },
+        { name: "Trail Ridge Road (Scenic Drive)", kid: "Both ages", detail: "Drive to 12,183 ft elevation — stay in the car, just walk at the visitor center area. Your engine will strain, go early morning." },
+        { name: "Estes Park Town", kid: "Both ages", detail: "Great shops, taffy, river walk, mini golf — perfect rest day activity" },
+        { name: "Elk Rut Season (Sept–Oct)", kid: "Both ages", detail: "Bull elk bugling and sparring in Horseshoe Park — one of the most incredible wildlife experiences in America" }
+      ],
+      parks: "Great Sand Dunes NP is 4 hours south — a completely different landscape and a must-do for kids. Black Canyon of the Gunnison is 4 hours southwest — dramatic canyon with far fewer crowds than the Grand Canyon.",
+      warning: "Altitude sickness is real at 8,000–12,000 ft. Drink extra water, go easy the first day, and watch for headaches in both kids. Your V10 will lose noticeable power above 9,000 ft — don't push it on grades."
+    }
+  };
+
+  function generateTrip() {
+    const origin = document.getElementById('origin').value.trim();
+    const destination = document.getElementById('destination').value.trim();
+    const startDate = document.getElementById('startDate').value;
+    const duration = document.getElementById('duration').value;
+    const campsiteType = document.getElementById('campsiteType').value;
+    const driveStyle = document.getElementById('driveStyle').value;
+
+    if (!destination) {
+      alert('Please enter a destination first!');
+      return;
+    }
+
+    const driveDistances = {
+      easy: '200–250 miles/day',
+      moderate: '250–350 miles/day',
+      push: '350–450 miles/day'
+    };
+
+    const campPrefs = {
+      full: 'full hookup sites',
+      partial: 'partial hookup (electric + water) sites',
+      state: 'state park campgrounds',
+      national: 'national park campgrounds',
+      mix: 'a mix of campsite types'
+    };
+
+    // Match destination keyword to data
+    let matchKey = null;
+    const dest = destination.toLowerCase();
+    if (dest.includes('yellowstone')) matchKey = 'yellowstone';
+    else if (dest.includes('zion')) matchKey = 'zion';
+    else if (dest.includes('florida') || dest.includes('gulf') || dest.includes('destin') || dest.includes('pensacola') || dest.includes('everglades') || dest.includes('key west')) matchKey = 'florida';
+    else if (dest.includes('grand canyon') || dest.includes('arizona') || dest.includes('az')) matchKey = 'grandcanyon';
+    else if (dest.includes('rocky mountain') || dest.includes('rmnp') || dest.includes('estes')) matchKey = 'rocky';
+    else if (dest.includes('mount airy') || dest.includes('mt airy') || dest.includes('mayberry') || dest.includes('pilot mountain')) matchKey = 'mountairy';
+
+    const resultDiv = document.getElementById('tripResult');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultSubtitle = document.getElementById('resultSubtitle');
+    const resultContent = document.getElementById('resultContent');
+
+    if (matchKey && destinationData[matchKey]) {
+      const data = destinationData[matchKey];
+      resultTitle.textContent = `Trip Plan: ${data.emoji} ${data.title}`;
+      resultSubtitle.textContent = `${origin ? origin + ' → ' : ''}${data.title} · ${duration || '?'} days · ${driveDistances[driveStyle]}`;
+
+      let html = `
+        <div class="alert info" style="margin-bottom:24px">
+          <div class="alert-icon">${data.emoji}</div>
+          <div><strong>${data.title}</strong>${data.description}</div>
+        </div>
+      `;
+
+      if (data.warning) {
+        html += `
+          <div class="alert warning" style="margin-bottom:24px">
+            <div class="alert-icon">⚠️</div>
+            <div><strong>RV Heads-Up for Your 29M</strong>${data.warning}</div>
+          </div>
+        `;
+      }
+
+      // Campsites
+      html += `<h3 style="font-size:1.1rem;font-weight:800;margin-bottom:16px;color:var(--dusk)">🏕️ Recommended Campsites</h3>`;
+      html += `<p style="font-size:0.88rem;color:#777;margin-bottom:16px">Filtered for your ${campPrefs[campsiteType]} preference where possible. All verified for 30+ ft RVs. Your WindSport runs 30-amp — bring a 50-to-30 dogbone adapter for full-hookup sites.</p>`;
+
+      data.campsites.forEach(c => {
+        html += `
+          <div class="campsite-card">
+            <div class="campsite-header">
+              <div class="campsite-name">${c.name}</div>
+              <span class="campsite-type type-${c.type}">${c.label}</span>
+            </div>
+            <div class="campsite-meta">
+              <span>⚡ ${c.hookups}</span>
+              <span>🚌 Pull-Through: ${c.pullThru}</span>
+              <span>💰 ${c.rate}</span>
+            </div>
+            <div class="campsite-desc">${c.desc}</div>
+          </div>
+        `;
+      });
+
+      // Stops
+      html += `<h3 style="font-size:1.1rem;font-weight:800;margin:28px 0 16px;color:var(--dusk)">📍 Top Stops for Your Family</h3>`;
+      data.stops.forEach((s, i) => {
+        html += `
+          <div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px dashed var(--border);font-size:0.9rem">
+            <div class="stop-dot">${i + 1}</div>
+            <div>
+              <strong style="color:var(--dusk)">${s.name}</strong>
+              <span class="age-chip" style="margin-left:8px;font-size:0.68rem">${s.kid}</span>
+              <div style="color:#666;font-size:0.85rem;margin-top:3px">${s.detail}</div>
+            </div>
+          </div>
+        `;
+      });
+
+      // Nearby parks
+      html += `
+        <div class="alert success" style="margin-top:24px">
+          <div class="alert-icon">🌲</div>
+          <div><strong>Nearby National Parks &amp; Attractions</strong>${data.parks}</div>
+        </div>
+      `;
+
+      // Booking reminder
+      html += `
+        <div class="alert info" style="margin-top:16px">
+          <div class="alert-icon">📅</div>
+          <div><strong>Booking Tips</strong>Book campsites at <strong>recreation.gov</strong> for national parks and state systems. For private RV parks use <strong>Campspot</strong> or <strong>RVparky</strong>. Popular sites book out 6 months ahead in summer — don't wait.</div>
+        </div>
+      `;
+
+      resultContent.innerHTML = html;
+    } else {
+      // Generic response for unrecognized destinations
+      resultTitle.textContent = `Trip Plan: ${destination}`;
+      resultSubtitle.textContent = `${origin ? origin + ' → ' : ''}${destination} · ${duration || '?'} days · Thor Hurricane 29M`;
+
+      resultContent.innerHTML = `
+        <div class="alert info" style="margin-bottom:24px">
+          <div class="alert-icon">🗺️</div>
+          <div><strong>Custom Destination: ${destination}</strong>Tell me more about this destination in the chat and I'll build you a full custom trip plan with campsites, stops, and national park recommendations specific to that area. I have detailed plans ready for Yellowstone, Zion, Florida/Gulf Coast, Grand Canyon, and Rocky Mountain NP.</div>
+        </div>
+        <div class="alert warning">
+          <div class="alert-icon">⚠️</div>
+          <div><strong>Before You Go — Always Check:</strong><ul style="margin-top:8px;padding-left:20px;font-size:0.9rem">
+            <li>RV length restrictions at your destination campgrounds</li>
+            <li>Low bridge clearances on your planned route (use Garmin RV GPS)</li>
+            <li>Mountain pass conditions at 511.gov for your state</li>
+            <li>Campsite availability at recreation.gov — book 3–6 months ahead for summer</li>
+            <li>Weight stations for your route — your 29M may need to stop</li>
+          </ul></div>
+        </div>
+        <div class="alert success" style="margin-top:16px">
+          <div class="alert-icon">💬</div>
+          <div><strong>Want the full custom plan?</strong>Message me your destination and I'll give you specific campsite names, mile-by-mile stops, national parks within range, kid-friendly activities, and RV-specific driving notes for your exact 29M. I just need to know where you're going!</div>
+        </div>
+      `;
+    }
+
+    resultDiv.classList.add('visible');
+    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+</script>
+</body>
+</html>

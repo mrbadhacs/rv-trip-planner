@@ -532,6 +532,68 @@
     }
     .footer strong { color: var(--sun); }
 
+    /* ── LIVE SEARCH ── */
+    .live-results {
+      margin-top: 28px;
+      border-top: 2px dashed var(--border);
+      padding-top: 24px;
+    }
+    .live-results-header {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+    }
+    .live-results-header h3 { font-size: 1.05rem; font-weight: 800; color: var(--dusk); }
+    .live-spinner {
+      display: inline-block; width: 18px; height: 18px;
+      border: 3px solid var(--border); border-top-color: var(--sky);
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .live-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .live-card:hover { border-color: var(--sky); box-shadow: 0 4px 14px rgba(0,0,0,0.07); }
+    .live-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+    .live-card-name { font-weight: 700; font-size: 0.97rem; color: var(--dusk); }
+    .source-chip {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 3px 9px; border-radius: 50px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .source-chip.federal  { background: #eafaf1; color: #1e8449; }
+    .source-chip.private  { background: #eaf4fc; color: #1a6b9a; }
+    .live-card-meta { display: flex; gap: 14px; font-size: 0.81rem; color: #888; flex-wrap: wrap; margin-bottom: 6px; }
+    .live-card-desc { font-size: 0.85rem; color: #666; margin-bottom: 10px; }
+    .live-card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .live-btn {
+      font-size: 0.78rem; font-weight: 700; padding: 6px 14px;
+      border-radius: 7px; border: 1.5px solid var(--border);
+      background: var(--white); color: var(--sky); cursor: pointer;
+      text-decoration: none; transition: all 0.15s; display: inline-block;
+      font-family: inherit;
+    }
+    .live-btn:hover { background: var(--sky); color: white; border-color: var(--sky); }
+    .live-btn.primary { background: var(--sky); color: white; border-color: var(--sky); }
+    .live-btn.primary:hover { background: #155a82; }
+    .no-results {
+      text-align: center; padding: 30px 20px;
+      color: #999; font-size: 0.9rem;
+    }
+    .search-radius-row {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 14px; font-size: 0.85rem; color: #777;
+    }
+    .search-radius-row select {
+      padding: 5px 10px; border-radius: 7px;
+      border: 1.5px solid var(--border); font-family: inherit;
+      font-size: 0.82rem; color: var(--dusk); background: white; cursor: pointer;
+    }
+
     /* ── ENERGY MANAGER ── */
     #energy { background: #0f1f2e; }
     #energy .section-tag { background: var(--sun); color: var(--dusk); }
@@ -1067,7 +1129,7 @@
         </div>
         <div class="form-group">
           <label>Destination</label>
-          <input type="text" class="form-control" id="destination" placeholder="e.g. Yellowstone, WY" />
+          <input type="text" class="form-control" id="destination" placeholder="e.g. Asheville, NC" />
         </div>
       </div>
       <div class="form-row">
@@ -1127,6 +1189,26 @@
         </div>
       </div>
       <div id="resultContent"></div>
+
+      <!-- Live campsite search results injected here -->
+      <div id="liveResults" style="display:none" class="live-results">
+        <div class="live-results-header">
+          <h3>📡 Live Campsite Search</h3>
+          <span id="liveSpinner" class="live-spinner"></span>
+          <span id="liveStatus" style="font-size:0.82rem;color:#888"></span>
+        </div>
+        <div class="search-radius-row">
+          Search within
+          <select id="searchRadius" onchange="rerunLiveSearch()">
+            <option value="25">25 miles</option>
+            <option value="40" selected>40 miles</option>
+            <option value="60">60 miles</option>
+            <option value="100">100 miles</option>
+          </select>
+          of destination — filtered for RV access
+        </div>
+        <div id="liveCards"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -1786,6 +1868,101 @@
 
 <!-- ══════════ SCRIPT ══════════ -->
 <script>
+  // ── LIVE CAMPSITE SEARCH ──
+  let _lastLat = null, _lastLon = null;
+
+  async function geocodeDestination(destination) {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(destination)}&format=json&limit=1`;
+    const res  = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+    const data = await res.json();
+    if (!data.length) throw new Error('Location not found');
+    return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), display: data[0].display_name };
+  }
+
+  async function runLiveSearch(destination) {
+    const panel   = document.getElementById('liveResults');
+    const spinner = document.getElementById('liveSpinner');
+    const status  = document.getElementById('liveStatus');
+    const cards   = document.getElementById('liveCards');
+    const radius  = document.getElementById('searchRadius').value;
+
+    panel.style.display = 'block';
+    spinner.style.display = 'inline-block';
+    status.textContent = 'Locating destination…';
+    cards.innerHTML = '';
+
+    try {
+      const { lat, lon, display } = await geocodeDestination(destination);
+      _lastLat = lat; _lastLon = lon;
+
+      const shortName = display.split(',').slice(0, 2).join(',');
+      status.textContent = `Searching within ${radius} miles of ${shortName}…`;
+
+      const apiRes  = await fetch(`/api/search?lat=${lat}&lon=${lon}&radius=${radius}`);
+      const apiData = await apiRes.json();
+
+      spinner.style.display = 'none';
+
+      if (!apiData.results || !apiData.results.length) {
+        status.textContent = 'No results found — try a wider radius.';
+        cards.innerHTML = `<div class="no-results">No campgrounds found within ${radius} miles.<br>Try expanding the search radius above.</div>`;
+        return;
+      }
+
+      status.textContent = `${apiData.results.length} campgrounds found near ${shortName}`;
+      cards.innerHTML = apiData.results.map(c => buildLiveCard(c)).join('');
+
+    } catch (err) {
+      spinner.style.display = 'none';
+      if (err.message === 'Location not found') {
+        status.textContent = 'Could not locate that destination — try adding a state abbreviation.';
+      } else if (err.message.includes('fetch')) {
+        status.textContent = 'API keys not yet configured — add them in Vercel settings.';
+        cards.innerHTML = `<div class="no-results" style="color:#e07b39">
+          ⚙️ <strong>Almost there!</strong><br><br>
+          Add your API keys to Vercel to enable live search:<br><br>
+          <strong>RIDB_API_KEY</strong> — from recreation.gov<br>
+          <strong>GOOGLE_PLACES_KEY</strong> — from Google Cloud Console<br><br>
+          Vercel Dashboard → rv-trip-planner → Settings → Environment Variables
+        </div>`;
+      } else {
+        status.textContent = 'Search error — try again.';
+      }
+    }
+  }
+
+  function rerunLiveSearch() {
+    const dest = document.getElementById('destination').value.trim();
+    if (dest && _lastLat) runLiveSearch(dest);
+  }
+
+  function buildLiveCard(c) {
+    const sourceClass = c.type === 'federal' ? 'federal' : 'private';
+    const mapsLink    = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.name + ' ' + c.address)}`;
+
+    return `
+      <div class="live-card">
+        <div class="live-card-header">
+          <div class="live-card-name">${c.name}</div>
+          <span class="source-chip ${sourceClass}">${c.sourceLabel}</span>
+        </div>
+        <div class="live-card-meta">
+          ${c.address ? `<span>📍 ${c.address}</span>` : ''}
+          <span>⚡ ${c.hookups}</span>
+          <span>🚌 Pull-through: ${c.pullThru}</span>
+          ${c.ratingStr ? `<span>${c.ratingStr}</span>` : ''}
+          ${c.open === true ? '<span style="color:#27ae60;font-weight:700">● Open now</span>' : ''}
+        </div>
+        <div class="live-card-desc">${c.desc}</div>
+        <div class="live-card-actions">
+          <a class="live-btn primary" href="${c.bookingUrl}" target="_blank" rel="noopener">
+            ${c.type === 'federal' ? '🏕️ Book on Recreation.gov' : '🔍 View on Google Maps'}
+          </a>
+          <a class="live-btn" href="${mapsLink}" target="_blank" rel="noopener">🗺️ Get Directions</a>
+        </div>
+      </div>`;
+  }
+
   // ── HOME & GPS SHORTCUTS ──
   const HOME_ADDRESS = '195 Red Hawk Place, Smithfield, NC';
 
@@ -2414,6 +2591,9 @@
     const driveStyle  = document.getElementById('driveStyle').value;
 
     if (!destination) { alert('Please enter a destination first!'); return; }
+
+    // kick off live API search in parallel — results appear below the plan
+    runLiveSearch(destination);
 
     // calculate nights from date range
     let nights = 3;

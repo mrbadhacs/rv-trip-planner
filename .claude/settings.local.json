@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(ls /Users/dannybadalamenti/.claude/commands/ 2>/dev/null || echo \"no commands dir yet\")",
+      "Bash(mkdir -p /Users/dannybadalamenti/.claude/commands)",
+      "mcp__47e9690a-c7d9-4255-88cc-edf03319812b__deploy_to_vercel",
+      "Bash(npx vercel *)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'Initial deploy: Badalamenti Family RV Trip Planner *)",
+      "Bash(git remote *)",
+      "Bash(git branch *)",
+      "Bash(git push *)",
+      "Bash(gh auth *)",
+      "Read(//Users/dannybadalamenti/.ssh/**)",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "mcp__Claude_in_Chrome__navigate",
+      "mcp__Claude_in_Chrome__read_page",
+      "Bash(git commit -m 'Add date range picker, fuel estimate in trip results, 6 new destinations *)"
+    ]
+  }
+}

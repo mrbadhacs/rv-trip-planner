@@ -1072,14 +1072,15 @@
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label>Trip Start Date</label>
-          <input type="date" class="form-control" id="startDate" />
+          <label>Leave Date</label>
+          <input type="date" class="form-control" id="startDate" onchange="updateDuration()" />
         </div>
         <div class="form-group">
-          <label>Trip Duration <span>(days)</span></label>
-          <input type="number" class="form-control" id="duration" placeholder="e.g. 10" min="2" max="60" />
+          <label>Return Date</label>
+          <input type="date" class="form-control" id="endDate" onchange="updateDuration()" />
         </div>
       </div>
+      <div id="durationChip" style="display:none;margin:-10px 0 18px;padding:10px 16px;background:#eaf4fc;border:1px solid #aed6f1;border-radius:10px;font-size:0.88rem;color:#1a5276;font-weight:600"></div>
       <div class="form-row">
         <div class="form-group">
           <label>Campsite Preference</label>
@@ -1967,7 +1968,7 @@
   // Pre-loaded destination data for the trip planner
   const destinationData = {
     yellowstone: {
-      title: "Yellowstone National Park, WY",
+      title: "Yellowstone National Park, WY", miles: 1950,
       emoji: "🦌",
       description: "One of the most iconic family destinations in the US. Book as early as possible — campsites fill up 6 months ahead.",
       campsites: [
@@ -2010,7 +2011,7 @@
       warning: "Check your route: Yellowstone roads have weight and length restrictions on some loops. Your 29M is fine on the main Grand Loop Road. Avoid driving Beartooth Highway with the full coach — it's spectacular but very challenging."
     },
     zion: {
-      title: "Zion National Park, UT",
+      title: "Zion National Park, UT", miles: 2100,
       emoji: "🏔️",
       description: "Towering red cliffs, emerald pools, and the famous Narrows. Great for families — the main canyon shuttle removes driving stress.",
       campsites: [
@@ -2053,7 +2054,7 @@
       warning: "Zion is extremely crowded June–August. Go May or September for shorter lines at the shuttle and cooler temps for little ones. Private vehicles cannot drive the main canyon — take the free shuttle from Springdale."
     },
     florida: {
-      title: "Florida Gulf Coast",
+      title: "Florida Gulf Coast", miles: 650,
       emoji: "🌊",
       description: "Calm, warm Gulf water, white sand beaches, and excellent full-hookup RV parks. Perfect winter escape for northern families.",
       campsites: [
@@ -2096,7 +2097,7 @@
       warning: "Florida Keys driving: US-1 from Homestead to Key West is doable in your 29M but stressful — narrow bridges, no shoulders, strong crosswinds. Do it slow, preferably mid-week, and never in wind advisories."
     },
     grandcanyon: {
-      title: "Grand Canyon, AZ",
+      title: "Grand Canyon, AZ", miles: 1850,
       emoji: "🏜️",
       description: "The most awe-inspiring place in the United States. Even a 3-year-old standing at the rim will remember this moment.",
       campsites: [
@@ -2138,8 +2139,125 @@
       parks: "Monument Valley is 180 miles east — a stunning half-day drive with iconic sandstone buttes. Antelope Canyon is 130 miles east near Page, AZ — book guided tours in advance. Page also has Lake Powell and Horseshoe Bend (short easy walk).",
       warning: "Never hike below the rim with young children — the trail descends 5,000 ft and the return is brutal in heat. The rim is enough for this trip. Keep your 3-year-old on a wrist leash near the unfenced edges."
     },
+    asheville: {
+      title: "Asheville, NC", emoji: "🏔️", miles: 275,
+      description: "Western NC's crown jewel — Blue Ridge Parkway, Biltmore Estate, waterfalls, and a vibrant food scene. About 4.5 hours from Smithfield on I-40 W. Great all-season destination.",
+      campsites: [
+        { name: "French Broad River Campground — 1030 Old Marshall Hwy, Asheville", type: "rv", label: "RV Park", hookups: "Full hookups · 30/50 amp · WiFi", pullThru: "Yes", rate: "$55–70/night", desc: "On the river, 10 min from downtown Asheville. Pull-throughs fit your 29M easily. Quiet, scenic, well-reviewed. Book at frenchbroadrivercampground.com." },
+        { name: "Lake Powhatan Campground — Pisgah National Forest", type: "national", label: "National Forest", hookups: "Electric only (30 amp)", pullThru: "Some sites", rate: "$28–38/night", desc: "8 miles from downtown in the national forest. Beautiful setting on a lake. Some sites fit 30+ ft — call ahead to confirm. Book at recreation.gov." },
+        { name: "Mama Gertie's Hideaway — Swannanoa, NC (12 mi east)", type: "rv", label: "RV Park", hookups: "Full hookups · 30/50 amp", pullThru: "Yes", rate: "$50–65/night", desc: "Quiet campground east of Asheville off I-40. Clean, friendly, big-rig friendly. Good budget option if Asheville-area sites are full." }
+      ],
+      stops: [
+        { name: "Biltmore Estate", kid: "6-yr-old focused", detail: "America's largest home — the gardens alone are stunning and easy walking for both girls. Budget a full day. Tickets $65+/adult, kids under 10 free. Buy online." },
+        { name: "Blue Ridge Parkway Scenic Drive", kid: "Both ages", detail: "Drive south from Asheville on the Parkway — pull over at every overlook. Free. Your WindSport handles it fine. Don't rush it, it's the point." },
+        { name: "Chimney Rock State Park", kid: "Both ages", detail: "45 min SE of Asheville. Take the elevator to the top — both girls will love it. Easy trail to the base, elevator does the hard part. Great views." },
+        { name: "Sliding Rock — Pisgah National Forest", kid: "Both ages", detail: "Natural 60-ft rock waterslide into a pool. Go early — gets crowded by 11am. Bring towels and water shoes. Your 6-yr-old will go 20 times." },
+        { name: "Asheville River Arts District", kid: "Both ages", detail: "Walk the galleries, grab lunch — very stroller-friendly along the river. Kids enjoy the murals and open art studios." },
+        { name: "WNC Nature Center", kid: "Both ages — 3-yr-old especially", detail: "Zoo-style nature center with red wolves, otters, cougars. Small, easy to walk, not overwhelming for a 3-yr-old. $12/adult, $8/kids. Half-day activity." }
+      ],
+      parks: "Pisgah National Forest surrounds Asheville with hundreds of waterfalls and trails. Looking Glass Falls (3 mi south of Brevard) is a 60-ft waterfall you can walk right up to — flat, paved, perfect for both girls. Great Smoky Mountains is 90 min west — easy to combine into a longer trip.",
+      warning: "Route: I-40 W from Smithfield all the way to Asheville — easy, no issues for your 29M. Avoid downtown Asheville streets with the coach — park at camp and use their free trolley or rideshare. Blue Ridge Parkway is fine for your coach but has a 45 MPH speed limit and lots of pullouts — take your time."
+    },
+
+    smokies: {
+      title: "Great Smoky Mountains, TN/NC", emoji: "🌫️", miles: 320,
+      description: "Most-visited national park in America — and for good reason. Wildflowers, wildlife, waterfalls, and Gatlinburg right at the door. About 5 hours from Smithfield on I-40 W.",
+      campsites: [
+        { name: "Smoky Bear Campground & RV Park — Gatlinburg, TN", type: "rv", label: "RV Resort", hookups: "Full hookups · 30/50 amp · WiFi · Cable", pullThru: "Yes — big-rig friendly", rate: "$65–85/night", desc: "1 mile from Gatlinburg entrance. Pool, playground, clean sites. Your girls will love the location — walk to Gatlinburg in minutes. smokybear.com." },
+        { name: "Cosby Campground — Inside GSMNP (TN side)", type: "national", label: "National Park", hookups: "No hookups (dry camping)", pullThru: "Limited — max 25 ft recommended", rate: "$25/night", desc: "Quietest campground inside the park. Note: site length limit makes this tight for your 29M — better suited if you want the national forest experience and have solar." },
+        { name: "Riverside RV Park — Pigeon Forge, TN", type: "rv", label: "RV Park", hookups: "Full hookups · 30/50 amp", pullThru: "Yes", rate: "$60–80/night", desc: "On the Little Pigeon River in Pigeon Forge. Easy access to both the park and Dollywood. Family-friendly, pull-throughs accommodate your coach." }
+      ],
+      stops: [
+        { name: "Cades Cove Loop Road", kid: "Both ages", detail: "11-mile one-way loop — drive slowly and spot deer, turkey, black bears. Your 3-yr-old will love seeing animals from the car. Go at dawn for best wildlife." },
+        { name: "Laurel Falls Trail", kid: "6-yr-old", detail: "Paved 2.6 mi round-trip to the most visited waterfall in the Smokies. Some uphill but totally doable. Spectacular payoff. Can bring a carrier for the 3-yr-old." },
+        { name: "Sugarlands Visitor Center", kid: "Both ages", detail: "Start here — Junior Ranger program, exhibits, relief map of the park. Free. Pick up the kids' activity book." },
+        { name: "Gatlinburg SkyLift Park", kid: "Both ages", detail: "Sky bridge across a gorge — your 6-yr-old will feel like a superhero. May be scary for a 3-yr-old. Check age/height recommendations. $30/adult." },
+        { name: "Dollywood — Pigeon Forge", kid: "Both ages", detail: "One full day minimum. Great rides for all ages, plus the Eagle Sanctuary is free with admission. Your 3-yr-old has plenty of rides too. Book online for discounts." },
+        { name: "Roaring Fork Motor Nature Trail", kid: "Both ages", detail: "5-mile one-way scenic drive with waterfalls right next to the road. Easy short walks, no strenuous hiking needed. Closed in winter." }
+      ],
+      parks: "Cherokee, NC (the NC entrance to the park) has the Museum of the Cherokee Indian — excellent and kid-friendly. Nantahala Gorge is 45 min south of Cherokee and great for whitewater rafting (older kids). Asheville is 90 min east — combine both on a longer trip.",
+      warning: "Route: I-40 W all the way — no issues for your 29M. Inside the park, some roads have tight curves and low clearances — stick to the main roads (441, Cades Cove Loop, Roaring Fork). Do NOT take your coach on the Smokies' back roads. Gatlinburg traffic on summer weekends is brutal — move the coach early morning and park it for the day."
+    },
+
+    outerbanks: {
+      title: "Outer Banks, NC", emoji: "🦅", miles: 130,
+      description: "Wild horses, Cape Hatteras lighthouse, the Wright Brothers, and the biggest sand dunes on the East Coast — all about 2 hours from Smithfield. Your closest big adventure.",
+      campsites: [
+        { name: "Oregon Inlet Campground — Cape Hatteras NS, Nags Head", type: "national", label: "National Seashore", hookups: "Electric only (30 amp) · No sewer", pullThru: "Yes — large sites", rate: "$28–38/night", desc: "Best value on the OBX — national seashore sites right near the beach. Book at recreation.gov. 30-amp fits your WindSport perfectly. Bring a sewer donut for the grey tank." },
+        { name: "Camp Hatteras RV Resort — Waves, NC", type: "rv", label: "RV Resort", hookups: "Full hookups · 30/50 amp · Pool · WiFi", pullThru: "Yes", rate: "$80–120/night", desc: "Oceanfront and soundfront RV resort in the heart of the OBX. Two pools, activities for kids, beach access. Premium price but your girls will not want to leave. camphatteras.com." },
+        { name: "Frisco Campground — Cape Hatteras NS (south)", type: "national", label: "National Seashore", hookups: "Electric only (30 amp)", pullThru: "Yes", rate: "$28–38/night", desc: "More secluded than Oregon Inlet. Near the Hatteras Lighthouse area. Good for a quieter experience with beach access. Book at recreation.gov." }
+      ],
+      stops: [
+        { name: "Jockey's Ridge State Park — Nags Head", kid: "Both ages — 3-yr-old loves it", detail: "Tallest sand dunes on the East Coast. Free admission, walk or run or roll down. Your 3-yr-old will lose her mind. Bring water and sunscreen. Incredible sunset spot." },
+        { name: "Cape Hatteras Lighthouse — Buxton", kid: "6-yr-old", detail: "Climb the tallest brick lighthouse in America (257 steps). Kids must be 42\" tall to climb. Your 6-yr-old will likely qualify. Stunning view at the top. $10/adult, free under 12." },
+        { name: "Wild Horses at Corolla", kid: "Both ages", detail: "Drive north on 4WD beach to see the wild Colonial Spanish Mustangs roaming free. Need a high-clearance 4WD vehicle (rent locally or book a tour). Your coach stays parked — this is a day-trip add-on." },
+        { name: "Wright Brothers National Memorial — Kill Devil Hills", kid: "6-yr-old", detail: "Where humans first flew. The museum is excellent and kid-friendly. Walk the First Flight path. $10/vehicle. Your 6-yr-old will love the history." },
+        { name: "Hatteras Island Beaches", kid: "Both ages", detail: "Some of the least crowded, most beautiful beaches on the East Coast. National Seashore means no development, no crowds. Perfect for your 3-yr-old — flat surf-side sand, gentle waves." },
+        { name: "Ocracoke Island Ferry", kid: "Both ages", detail: "Free NC ferry from Hatteras to Ocracoke — 40 min ride. Your coach stays parked (ferry fits cars only). Rent bikes on Ocracoke for a magical half-day. Kids love the ferry." }
+      ],
+      parks: "Cape Hatteras National Seashore runs the entire length of the OBX — it's the park. Fort Raleigh National Historic Site (Roanoke Island) is the site of the Lost Colony — 30 min from Nags Head, fascinating for older kids. The NC Aquarium on Roanoke Island is excellent for both girls — sharks, sea turtles, river otters.",
+      warning: "Route from Smithfield: US-70 E to US-64 E — about 130 miles, 2 hours. No issues for your 29M on the main roads. The OBX bridges (Bonner Bridge area) have 65 ft clearance — no problem. Stay on NC-12 for campsite access — avoid soft sand beach driving with the coach. Wind advisories are common — if wind is over 30 MPH, hold off on driving. The OBX is exposed."
+    },
+
+    myrtle: {
+      title: "Myrtle Beach, SC", emoji: "🎢", miles: 175,
+      description: "60 miles of beach, world-class mini golf, the SkyWheel, and warm Atlantic water — about 2.5 hours from Smithfield. Easy drive, huge payoff for kids.",
+      campsites: [
+        { name: "Apache Family Campground — 9700 Kings Rd, Myrtle Beach", type: "rv", label: "RV Resort", hookups: "Full hookups · 30/50 amp · WiFi", pullThru: "Yes", rate: "$65–95/night", desc: "Literally on the beach — walk out of your coach and put your toes in the sand. One of the best-located RV parks on the East Coast. Pull-throughs fit your 29M. Book months ahead for summer. apachecampground.com." },
+        { name: "Myrtle Beach State Park Campground", type: "state", label: "State Park", hookups: "Full hookups · 30 amp", pullThru: "Some sites", rate: "$35–50/night", desc: "800-acre state park with beach access. Better rate than private parks, quieter setting. Book at southcarolinaparks.com. Fills fast in summer." },
+        { name: "Ocean Lakes Family Campground — 6001 S Kings Hwy", type: "rv", label: "RV Resort", hookups: "Full hookups · 30/50 amp · WiFi · Pool", pullThru: "Yes", rate: "$80–120/night", desc: "Massive family-oriented resort — water park on site, golf carts to rent, beach access. Your girls will never want to leave. Huge site, fits your coach easily. oceanlakes.com." }
+      ],
+      stops: [
+        { name: "The Beach", kid: "Both ages", detail: "Grand Strand is 60 miles of wide, flat, Atlantic beach. Gentle waves on the south end. Perfect for a 3-yr-old. Rent beach chairs and an umbrella — full-day activity." },
+        { name: "Myrtle Beach SkyWheel", kid: "Both ages", detail: "187-ft Ferris wheel right on the boardwalk. Enclosed gondolas, safe for all ages. Both girls will love the view. ~$15/person." },
+        { name: "Ripley's Aquarium of Myrtle Beach", kid: "Both ages — rainy day hero", detail: "Walk-through shark tunnel, touch tanks, seahorses. Excellent for both ages. Budget 2–3 hours. $35/adult, $22/kids. Book online for discounts." },
+        { name: "Broadway at the Beach", kid: "Both ages", detail: "Large entertainment complex — mini golf, Ripley's attractions, restaurants, paddleboats on the lake. Easy full day. Free to walk around, individual attractions are ticketed." },
+        { name: "Barefoot Landing — North Myrtle Beach", kid: "Both ages", detail: "Shops, restaurants, and an alligator farm (Alabama Theatre area). Walk the boardwalk over the water. Very stroller-friendly." },
+        { name: "Putt-Putt / Mini Golf", kid: "Both ages", detail: "Myrtle Beach has more mini golf courses per mile than anywhere in the world. Your 3-yr-old can do this. Pick any course — they're all good. Family night activity after the beach." }
+      ],
+      parks: "Huntington Beach State Park is 25 miles south in Murrells Inlet — considered the best state park in SC. Beautiful beach, saltwater marshes, and Atalaya Castle. Also a great RV campground. Brookgreen Gardens next door has a butterfly garden and kids' sculpture trail.",
+      warning: "Route from Smithfield: US-70 E to US-74 E to US-501 S into Myrtle Beach — about 175 miles, 2.5 hours. Straightforward for your 29M. Myrtle Beach summer traffic on US-17 and Kings Highway is stop-and-go — arrive Friday before 2pm or after 8pm to avoid it. Most RV parks are on Kings Hwy (US-17 Business) — easy access, no tight turns."
+    },
+
+    charleston: {
+      title: "Charleston, SC", emoji: "⚓", miles: 250,
+      description: "Historic cobblestone streets, Rainbow Row, Fort Sumter, and some of the best food in the South. About 4 hours from Smithfield. More of a culture trip — your 6-yr-old will love the history.",
+      campsites: [
+        { name: "James Island County Park — 871 Riverland Dr, Charleston", type: "state", label: "County Park", hookups: "Full hookups · 30/50 amp · WiFi", pullThru: "Yes", rate: "$50–65/night", desc: "Best RV base camp for Charleston — 6 miles from downtown, county park setting with a water park on site (summer). Free shuttle to downtown in season. Excellent pull-throughs. Book at ccprc.com." },
+        { name: "KOA Charleston — 9494 US-78, Ladson", type: "rv", label: "KOA", hookups: "Full hookups · 30/50 amp · Pool · WiFi", pullThru: "Yes", rate: "$70–90/night", desc: "20 miles from downtown — further out but full KOA amenities. Pool and playground on site. Good base if James Island is full." }
+      ],
+      stops: [
+        { name: "Historic Downtown Charleston Walk", kid: "Both ages", detail: "Rainbow Row, The Battery, White Point Garden. Flat, beautiful, stroller-friendly. Best in the morning before heat. Both girls will enjoy the colorful houses." },
+        { name: "Fort Sumter National Monument", kid: "6-yr-old", detail: "Ferry to the island where the Civil War started. 30-min boat ride each way, 1 hr on the fort. Your 6-yr-old will be riveted. Book ferry at fortsumtertours.com." },
+        { name: "South Carolina Aquarium", kid: "Both ages — 3-yr-old loves it", detail: "Touch tanks, sea turtles, sharks. Excellent for both ages. On the waterfront in downtown Charleston. $35/adult, $24/kids." },
+        { name: "Magnolia Plantation & Gardens", kid: "Both ages", detail: "Beautiful gardens, petting zoo, tram tour, nature boat tour. Kids love the animals. Half-day activity. $20/adult, $10/kids." },
+        { name: "Patriots Point Naval & Maritime Museum", kid: "6-yr-old especially", detail: "Walk aboard the USS Yorktown aircraft carrier. Planes on deck, flight simulators. Your 6-yr-old will be amazed. Full day. $30/adult, $18/kids." }
+      ],
+      parks: "Congaree National Park is 2 hours northwest — old-growth forest with boardwalk trails perfect for kids. Cape Romain National Wildlife Refuge is 30 min north — great birding and kayaking. Cumberland Island National Seashore is 3 hours south — wild horses and pristine beaches (ferry only, worth it).",
+      warning: "Route from Smithfield: I-95 S to I-26 E into Charleston — about 250 miles, 4 hours. Easy highway driving for your 29M. Do NOT drive your coach into historic downtown Charleston — streets are narrow, one-way, and parking is impossible for an RV. Park at camp, take the county park shuttle or an Uber/rideshare downtown."
+    },
+
+    blueridge: {
+      title: "Blue Ridge Parkway, NC/VA", emoji: "🌄", miles: 230,
+      description: "America's most scenic drive — 469 miles of ridge-top road with endless overlooks, waterfalls, and farm stands. Access it from Asheville (south end) or anywhere along the NC/VA border.",
+      campsites: [
+        { name: "Linville Falls Campground — MP 316, Blue Ridge Pkwy", type: "national", label: "National Parkway", hookups: "Electric only (30 amp)", pullThru: "Some sites", rate: "$22–30/night", desc: "Right on the Parkway, walking distance to Linville Falls. Book at recreation.gov. Good pull-through sites for 30-ft coaches. Quiet, forested, magical." },
+        { name: "Crabtree Falls Campground — MP 339, Blue Ridge Pkwy", type: "national", label: "National Parkway", hookups: "Electric only (30 amp)", pullThru: "Some sites", rate: "$22–30/night", desc: "Near one of NC's best waterfalls. Trail to Crabtree Falls is 2.5 mi loop — manageable for the 6-yr-old. Book at recreation.gov." },
+        { name: "Bear Den Campground — Spruce Pine, NC (near MP 331)", type: "rv", label: "RV Park", hookups: "Full hookups · 30/50 amp", pullThru: "Yes", rate: "$45–60/night", desc: "Just off the Parkway near Spruce Pine. Full hookups when you want them. Great base for several days of Parkway exploration." }
+      ],
+      stops: [
+        { name: "Linville Falls — MP 316", kid: "Both ages", detail: "Short trail (1 mi) to overlooks above a spectacular gorge waterfall. Paved to the first overlook. Both girls can make it. One of the best waterfall views in the Appalachians." },
+        { name: "Museum of North Carolina Minerals — MP 331", kid: "6-yr-old", detail: "Free! Gems, minerals, mining history of the NC mountains. Your 6-yr-old will love the crystals and gemstones. 30-min stop." },
+        { name: "Crabtree Falls — MP 339", kid: "6-yr-old", detail: "70-ft waterfall through rhododendron tunnels. 2.5 mi loop — the 6-yr-old can do it, carry the 3-yr-old in a pack if needed. Worth every step." },
+        { name: "Linn Cove Viaduct — MP 305", kid: "Both ages", detail: "Iconic curved concrete bridge hugging the side of Grandfather Mountain. Walk the short trail under it. The engineering alone is worth stopping for — your 6-yr-old will think it's a rollercoaster." },
+        { name: "Grandfather Mountain — MP 305", kid: "6-yr-old focused", detail: "Mile-High Swinging Bridge and wildlife habitats (bears, eagles, cougars). $25/adult, $15/kids. The bridge will terrify and delight your 6-yr-old. Not for the 3-yr-old unless she's fearless." }
+      ],
+      parks: "Pisgah National Forest lines both sides of the Parkway in NC — hundreds of waterfalls accessible by short trails. Shenandoah National Park connects to the north end of the Parkway in Virginia. Julian Price Memorial Park (MP 297) has a beautiful lake loop trail that's easy for both girls.",
+      warning: "Route to access the NC section: I-40 W to Asheville, then US-74 or US-221 up to the Parkway. Your 29M handles the Parkway fine but the speed limit is 45 MPH the entire length — this is a slow drive by design. No fuel on the Parkway itself — fill up before you get on and plan fuel stops at exits. Some tunnels have 13-ft clearance — your coach at 12'2\" is fine but stay alert."
+    },
+
     mountairy: {
-      title: "Mount Airy, NC (Mayberry!)",
+      title: "Mount Airy, NC (Mayberry!)", miles: 170,
       emoji: "🎬",
       description: "Andy Griffith's real hometown — the inspiration for Mayberry. Small-town charm, Pilot Mountain right next door, and easy family-friendly weekend vibes. Only ~2.5 hours from Smithfield.",
       campsites: [
@@ -2185,7 +2303,7 @@
       warning: "Route from Smithfield: Take I-40 W to US-421 N straight into Mount Airy — about 170 miles, 2.5 hours. Easy drive on wide interstate highways, no issues for your 29M. Avoid NC-89 into town — it's narrow with tight turns. At Pilot Mountain, the upper parking lot is manageable for your coach but tight on busy weekends. Consider parking the RV at camp and driving a regular vehicle or calling a rideshare to the trailhead on peak days."
     },
     rocky: {
-      title: "Rocky Mountain National Park, CO",
+      title: "Rocky Mountain National Park, CO", miles: 1400,
       emoji: "🏔️",
       description: "Moose, elk, bighorn sheep, and stunning alpine scenery — all within 90 minutes of Denver.",
       campsites: [
@@ -2229,146 +2347,182 @@
     }
   };
 
-  function generateTrip() {
-    const origin = document.getElementById('origin').value.trim();
-    const destination = document.getElementById('destination').value.trim();
-    const startDate = document.getElementById('startDate').value;
-    const duration = document.getElementById('duration').value;
-    const campsiteType = document.getElementById('campsiteType').value;
-    const driveStyle = document.getElementById('driveStyle').value;
+  // ── DATE RANGE → NIGHTS ──
+  function updateDuration() {
+    const s = document.getElementById('startDate').value;
+    const e = document.getElementById('endDate').value;
+    const chip = document.getElementById('durationChip');
+    if (!s || !e) { chip.style.display = 'none'; return; }
+    const start = new Date(s), end = new Date(e);
+    const nights = Math.round((end - start) / 86400000);
+    if (nights <= 0) { chip.style.display = 'none'; return; }
+    const days = nights + 1;
+    chip.style.display = 'block';
+    chip.textContent = `📅 ${days} day${days>1?'s':''} / ${nights} night${nights>1?'s':''} — ${start.toLocaleDateString('en-US',{month:'short',day:'numeric'})} → ${end.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`;
+  }
 
-    if (!destination) {
-      alert('Please enter a destination first!');
-      return;
+  // ── FUEL ESTIMATE BLOCK (injected into every trip result) ──
+  function buildFuelBlock(miles, nights, campsiteType) {
+    // pull live values from energy calculator if filled in, else use defaults
+    const fuelOnBoard = parseFloat(document.getElementById('fuelGal').value) || 60;
+    const lp1 = parseFloat(document.getElementById('lp1').value) || 18;
+    const lp2 = parseFloat(document.getElementById('lp2').value) || 20;
+    const lpOnBoard = lp1 + lp2;
+    const mpg = parseFloat(document.getElementById('mpg').value) || 8;
+
+    const fuelNeeded  = (miles * 2) / mpg; // round trip
+    const fuelAfter   = Math.max(0, fuelOnBoard - fuelNeeded);
+    const fuelOk      = fuelAfter > 20;
+
+    // LP estimate: dry camping uses ~15 lbs/night, partial ~8, full hookups ~3
+    const lpPerNight  = campsiteType === 'full' ? 3 : campsiteType === 'partial' ? 8 : 15;
+    const lpNeeded    = lpPerNight * nights;
+    const lpAfter     = Math.max(0, lpOnBoard - lpNeeded);
+    const lpOk        = lpAfter > 8;
+
+    const fuelColor  = fuelOk  ? '#27ae60' : '#e74c3c';
+    const lpColor    = lpOk    ? '#27ae60' : '#e74c3c';
+
+    return `
+      <div style="background:#f0f4f8;border-radius:14px;padding:20px 22px;margin-top:24px;border:1px solid #dce3ea">
+        <h3 style="font-size:1rem;font-weight:800;color:#2c3e50;margin-bottom:14px;display:flex;align-items:center;gap:8px">
+          ⛽ Fuel &amp; Energy Estimate
+          <span style="font-size:0.7rem;font-weight:600;background:#1a6b9a;color:white;padding:2px 10px;border-radius:50px">Based on your current tanks</span>
+        </h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:0.88rem">
+          <div style="background:white;border-radius:10px;padding:14px;border:1px solid #dce3ea">
+            <div style="color:#888;margin-bottom:4px">Round-trip fuel (${miles} mi × 2)</div>
+            <div style="font-weight:800;font-size:1.1rem;color:#2c3e50">${fuelNeeded.toFixed(1)} gal</div>
+            <div style="color:${fuelColor};font-weight:700;font-size:0.82rem;margin-top:4px">${fuelOk ? `✅ ${fuelAfter.toFixed(1)} gal left after trip` : `⚠️ Low — only ${fuelAfter.toFixed(1)} gal left. Fill up before leaving.`}</div>
+          </div>
+          <div style="background:white;border-radius:10px;padding:14px;border:1px solid #dce3ea">
+            <div style="color:#888;margin-bottom:4px">Propane for ${nights} night${nights>1?'s':''}</div>
+            <div style="font-weight:800;font-size:1.1rem;color:#2c3e50">~${lpNeeded.toFixed(0)} lbs LP</div>
+            <div style="color:${lpColor};font-weight:700;font-size:0.82rem;margin-top:4px">${lpOk ? `✅ ${lpAfter.toFixed(1)} lbs remaining after stay` : `⚠️ Low — fill tanks before you leave.`}</div>
+          </div>
+        </div>
+        <p style="font-size:0.78rem;color:#999;margin-top:10px">Update your tank levels in the ⚡ Energy tab for a more precise estimate.</p>
+      </div>`;
+  }
+
+  function generateTrip() {
+    const origin      = document.getElementById('origin').value.trim();
+    const destination = document.getElementById('destination').value.trim();
+    const startDate   = document.getElementById('startDate').value;
+    const endDate     = document.getElementById('endDate').value;
+    const campsiteType = document.getElementById('campsiteType').value;
+    const driveStyle  = document.getElementById('driveStyle').value;
+
+    if (!destination) { alert('Please enter a destination first!'); return; }
+
+    // calculate nights from date range
+    let nights = 3;
+    let dateLabel = '';
+    if (startDate && endDate) {
+      const s = new Date(startDate), e = new Date(endDate);
+      const n = Math.round((e - s) / 86400000);
+      if (n > 0) {
+        nights = n;
+        dateLabel = `${s.toLocaleDateString('en-US',{month:'short',day:'numeric'})} – ${e.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`;
+      }
     }
 
-    const driveDistances = {
-      easy: '200–250 miles/day',
-      moderate: '250–350 miles/day',
-      push: '350–450 miles/day'
-    };
-
+    const driveDistances = { easy:'200–250 mi/day', moderate:'250–350 mi/day', push:'350–450 mi/day' };
     const campPrefs = {
-      full: 'full hookup sites',
-      partial: 'partial hookup (electric + water) sites',
-      state: 'state park campgrounds',
-      national: 'national park campgrounds',
-      mix: 'a mix of campsite types'
+      full:'full hookup sites', partial:'partial hookup (electric + water) sites',
+      state:'state park campgrounds', national:'national park campgrounds', mix:'a mix of campsite types'
     };
 
-    // Match destination keyword to data
+    // ── destination matching ──
     let matchKey = null;
     const dest = destination.toLowerCase();
-    if (dest.includes('yellowstone')) matchKey = 'yellowstone';
-    else if (dest.includes('zion')) matchKey = 'zion';
-    else if (dest.includes('florida') || dest.includes('gulf') || dest.includes('destin') || dest.includes('pensacola') || dest.includes('everglades') || dest.includes('key west')) matchKey = 'florida';
-    else if (dest.includes('grand canyon') || dest.includes('arizona') || dest.includes('az')) matchKey = 'grandcanyon';
-    else if (dest.includes('rocky mountain') || dest.includes('rmnp') || dest.includes('estes')) matchKey = 'rocky';
-    else if (dest.includes('mount airy') || dest.includes('mt airy') || dest.includes('mayberry') || dest.includes('pilot mountain')) matchKey = 'mountairy';
+    if (dest.includes('yellowstone'))                                                        matchKey = 'yellowstone';
+    else if (dest.includes('zion'))                                                          matchKey = 'zion';
+    else if (dest.includes('florida')||dest.includes('gulf')||dest.includes('destin')||
+             dest.includes('pensacola')||dest.includes('everglades')||dest.includes('key west')) matchKey = 'florida';
+    else if (dest.includes('grand canyon')||dest.includes('arizona'))                        matchKey = 'grandcanyon';
+    else if (dest.includes('rocky mountain')||dest.includes('rmnp')||dest.includes('estes')) matchKey = 'rocky';
+    else if (dest.includes('mount airy')||dest.includes('mt airy')||
+             dest.includes('mayberry')||dest.includes('pilot mountain'))                     matchKey = 'mountairy';
+    else if (dest.includes('asheville')||dest.includes('black mountain'))                    matchKey = 'asheville';
+    else if (dest.includes('smoky')||dest.includes('smokies')||dest.includes('gatlinburg')||
+             dest.includes('pigeon forge')||dest.includes('cherokee'))                       matchKey = 'smokies';
+    else if (dest.includes('outer banks')||dest.includes('obx')||dest.includes('hatteras')||
+             dest.includes('corolla')||dest.includes('duck')||dest.includes('kill devil'))   matchKey = 'outerbanks';
+    else if (dest.includes('myrtle')||dest.includes('myrtle beach'))                         matchKey = 'myrtle';
+    else if (dest.includes('charleston')||dest.includes('sc'))                               matchKey = 'charleston';
+    else if (dest.includes('blue ridge')||dest.includes('blueridge'))                        matchKey = 'blueridge';
 
-    const resultDiv = document.getElementById('tripResult');
-    const resultTitle = document.getElementById('resultTitle');
+    const resultDiv     = document.getElementById('tripResult');
+    const resultTitle   = document.getElementById('resultTitle');
     const resultSubtitle = document.getElementById('resultSubtitle');
     const resultContent = document.getElementById('resultContent');
 
     if (matchKey && destinationData[matchKey]) {
       const data = destinationData[matchKey];
       resultTitle.textContent = `Trip Plan: ${data.emoji} ${data.title}`;
-      resultSubtitle.textContent = `${origin ? origin + ' → ' : ''}${data.title} · ${duration || '?'} days · ${driveDistances[driveStyle]}`;
+      resultSubtitle.textContent = `${origin ? origin+' → ' : ''}${data.title} · ${nights} night${nights>1?'s':''} · ${dateLabel || 'Date TBD'} · ${driveDistances[driveStyle]}`;
 
-      let html = `
-        <div class="alert info" style="margin-bottom:24px">
-          <div class="alert-icon">${data.emoji}</div>
-          <div><strong>${data.title}</strong>${data.description}</div>
-        </div>
-      `;
+      let html = `<div class="alert info" style="margin-bottom:24px"><div class="alert-icon">${data.emoji}</div><div><strong>${data.title}</strong> — ${data.description}</div></div>`;
 
       if (data.warning) {
-        html += `
-          <div class="alert warning" style="margin-bottom:24px">
-            <div class="alert-icon">⚠️</div>
-            <div><strong>RV Heads-Up for Your 29M</strong>${data.warning}</div>
-          </div>
-        `;
+        html += `<div class="alert warning" style="margin-bottom:24px"><div class="alert-icon">⚠️</div><div><strong>RV Heads-Up for Your 29M</strong> — ${data.warning}</div></div>`;
       }
 
-      // Campsites
-      html += `<h3 style="font-size:1.1rem;font-weight:800;margin-bottom:16px;color:var(--dusk)">🏕️ Recommended Campsites</h3>`;
-      html += `<p style="font-size:0.88rem;color:#777;margin-bottom:16px">Filtered for your ${campPrefs[campsiteType]} preference where possible. All verified for 30+ ft RVs. Your WindSport runs 30-amp — bring a 50-to-30 dogbone adapter for full-hookup sites.</p>`;
+      // fuel block
+      html += buildFuelBlock(data.miles || 250, nights, campsiteType);
 
+      // campsites
+      html += `<h3 style="font-size:1.1rem;font-weight:800;margin:28px 0 12px;color:var(--dusk)">🏕️ Recommended Campsites</h3>`;
+      html += `<p style="font-size:0.85rem;color:#777;margin-bottom:14px">Filtered for ${campPrefs[campsiteType]}. All verified for 30+ ft RVs. Your WindSport is 30-amp — bring a 50→30 dogbone adapter.</p>`;
       data.campsites.forEach(c => {
-        html += `
-          <div class="campsite-card">
-            <div class="campsite-header">
-              <div class="campsite-name">${c.name}</div>
-              <span class="campsite-type type-${c.type}">${c.label}</span>
-            </div>
-            <div class="campsite-meta">
-              <span>⚡ ${c.hookups}</span>
-              <span>🚌 Pull-Through: ${c.pullThru}</span>
-              <span>💰 ${c.rate}</span>
-            </div>
-            <div class="campsite-desc">${c.desc}</div>
-          </div>
-        `;
+        html += `<div class="campsite-card">
+          <div class="campsite-header"><div class="campsite-name">${c.name}</div><span class="campsite-type type-${c.type}">${c.label}</span></div>
+          <div class="campsite-meta"><span>⚡ ${c.hookups}</span><span>🚌 Pull-Through: ${c.pullThru}</span><span>💰 ${c.rate}</span></div>
+          <div class="campsite-desc">${c.desc}</div></div>`;
       });
 
-      // Stops
-      html += `<h3 style="font-size:1.1rem;font-weight:800;margin:28px 0 16px;color:var(--dusk)">📍 Top Stops for Your Family</h3>`;
+      // stops
+      html += `<h3 style="font-size:1.1rem;font-weight:800;margin:28px 0 12px;color:var(--dusk)">📍 Top Stops for Your Family</h3>`;
       data.stops.forEach((s, i) => {
-        html += `
-          <div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px dashed var(--border);font-size:0.9rem">
-            <div class="stop-dot">${i + 1}</div>
-            <div>
-              <strong style="color:var(--dusk)">${s.name}</strong>
-              <span class="age-chip" style="margin-left:8px;font-size:0.68rem">${s.kid}</span>
-              <div style="color:#666;font-size:0.85rem;margin-top:3px">${s.detail}</div>
-            </div>
-          </div>
-        `;
+        html += `<div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px dashed var(--border);font-size:0.9rem">
+          <div class="stop-dot">${i+1}</div>
+          <div><strong style="color:var(--dusk)">${s.name}</strong>
+          <span class="age-chip" style="margin-left:8px;font-size:0.68rem">${s.kid}</span>
+          <div style="color:#666;font-size:0.85rem;margin-top:3px">${s.detail}</div></div></div>`;
       });
 
-      // Nearby parks
-      html += `
-        <div class="alert success" style="margin-top:24px">
-          <div class="alert-icon">🌲</div>
-          <div><strong>Nearby National Parks &amp; Attractions</strong>${data.parks}</div>
-        </div>
-      `;
-
-      // Booking reminder
-      html += `
-        <div class="alert info" style="margin-top:16px">
-          <div class="alert-icon">📅</div>
-          <div><strong>Booking Tips</strong>Book campsites at <strong>recreation.gov</strong> for national parks and state systems. For private RV parks use <strong>Campspot</strong> or <strong>RVparky</strong>. Popular sites book out 6 months ahead in summer — don't wait.</div>
-        </div>
-      `;
+      html += `<div class="alert success" style="margin-top:24px"><div class="alert-icon">🌲</div><div><strong>Nearby Parks &amp; Attractions</strong> — ${data.parks}</div></div>`;
+      html += `<div class="alert info" style="margin-top:16px"><div class="alert-icon">📅</div><div><strong>Booking Tips</strong> — Book at <strong>recreation.gov</strong> for national/state parks. Private RV parks: use <strong>Campspot</strong> or <strong>RVparky</strong>. Summer/fall sites book out 3–6 months ahead — don't wait.</div></div>`;
 
       resultContent.innerHTML = html;
     } else {
-      // Generic response for unrecognized destinations
+      // ── generic fallback for unlisted destinations ──
       resultTitle.textContent = `Trip Plan: ${destination}`;
-      resultSubtitle.textContent = `${origin ? origin + ' → ' : ''}${destination} · ${duration || '?'} days · Thor Hurricane 29M`;
+      resultSubtitle.textContent = `${origin ? origin+' → ' : ''}${destination} · ${nights} night${nights>1?'s':''} · ${dateLabel || 'Date TBD'} · Thor WindSport 29M`;
 
       resultContent.innerHTML = `
-        <div class="alert info" style="margin-bottom:24px">
+        <div class="alert info" style="margin-bottom:20px">
           <div class="alert-icon">🗺️</div>
-          <div><strong>Custom Destination: ${destination}</strong>Tell me more about this destination in the chat and I'll build you a full custom trip plan with campsites, stops, and national park recommendations specific to that area. I have detailed plans ready for Yellowstone, Zion, Florida/Gulf Coast, Grand Canyon, and Rocky Mountain NP.</div>
+          <div><strong>${destination}</strong> — This destination isn't in the pre-loaded library yet. Below are your fuel estimates and the universal checklist. To get a full custom plan with specific campsites and stops, just tell me <em>"add ${destination} to my trip planner"</em> in the chat.</div>
         </div>
-        <div class="alert warning">
+        ${buildFuelBlock(300, nights, campsiteType)}
+        <div class="alert warning" style="margin-top:20px">
           <div class="alert-icon">⚠️</div>
-          <div><strong>Before You Go — Always Check:</strong><ul style="margin-top:8px;padding-left:20px;font-size:0.9rem">
-            <li>RV length restrictions at your destination campgrounds</li>
-            <li>Low bridge clearances on your planned route (use Garmin RV GPS)</li>
-            <li>Mountain pass conditions at 511.gov for your state</li>
-            <li>Campsite availability at recreation.gov — book 3–6 months ahead for summer</li>
-            <li>Weight stations for your route — your 29M may need to stop</li>
-          </ul></div>
+          <div><strong>Before You Go — Always Check</strong>
+            <ul style="margin-top:8px;padding-left:20px;font-size:0.9rem;line-height:2">
+              <li>Campsite pull-through length — you need 31+ ft minimum</li>
+              <li>30-amp hookup availability (bring 50→30 dogbone adapter)</li>
+              <li>Low bridge clearances on route — your coach is 12'2" tall</li>
+              <li>Book campsites at <strong>recreation.gov</strong> or <strong>campspot.com</strong></li>
+              <li>Check mountain pass conditions at <strong>511.gov</strong> if applicable</li>
+            </ul>
+          </div>
         </div>
         <div class="alert success" style="margin-top:16px">
           <div class="alert-icon">💬</div>
-          <div><strong>Want the full custom plan?</strong>Message me your destination and I'll give you specific campsite names, mile-by-mile stops, national parks within range, kid-friendly activities, and RV-specific driving notes for your exact 29M. I just need to know where you're going!</div>
-        </div>
+          <div><strong>Get the full plan</strong> — Tell me <em>"add ${destination} to my trip planner"</em> and I'll add real campsites, stops, national parks nearby, kid-friendly activities, and RV driving notes directly into this app.</div>
+        </div>`;
       `;
     }
 

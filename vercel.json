@@ -1,5 +1,10 @@
 {
   "version": 2,
+  "functions": {
+    "api/search.js": {
+      "runtime": "nodejs20.x"
+    }
+  },
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/(.*)",     "dest": "/rv-trip-planner.html" }

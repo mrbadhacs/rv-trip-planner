@@ -18,7 +18,9 @@
       "mcp__Claude_in_Chrome__navigate",
       "mcp__Claude_in_Chrome__read_page",
       "Bash(git commit -m 'Add date range picker, fuel estimate in trip results, 6 new destinations *)",
-      "Bash(git commit -m 'Add live campsite search via Recreation.gov + Google Places APIs *)"
+      "Bash(git commit -m 'Add live campsite search via Recreation.gov + Google Places APIs *)",
+      "mcp__Claude_in_Chrome__get_page_text",
+      "Bash(git commit -m 'Fix serverless function: CommonJS exports, debug mode, Node 20, better error handling *)"
     ]
   }
 }

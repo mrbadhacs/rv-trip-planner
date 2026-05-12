@@ -2514,6 +2514,26 @@
       ],
       parks: "Great Sand Dunes NP is 4 hours south — a completely different landscape and a must-do for kids. Black Canyon of the Gunnison is 4 hours southwest — dramatic canyon with far fewer crowds than the Grand Canyon.",
       warning: "Altitude sickness is real at 8,000–12,000 ft. Drink extra water, go easy the first day, and watch for headaches in both kids. Your V10 will lose noticeable power above 9,000 ft — don't push it on grades."
+    },
+
+    ozarks: {
+      title: "Ozark Mountains, AR/MO", emoji: "🏞️", miles: 900,
+      description: "Crystal-clear rivers, limestone bluffs, caves, and some of the best floating in America. The Buffalo National River is the crown jewel — first national river in the US. Great for families with young kids who love water and wildlife.",
+      campsites: [
+        { name: "Tyler Bend Campground — Buffalo National River, AR", type: "national", label: "National River", hookups: "Electric only (30/50 amp)", pullThru: "Yes — several large pull-throughs", rate: "$20–28/night", desc: "Best base camp for the Buffalo River. Book at recreation.gov. Right on the river, beautiful bluff views, rangers do evening programs for kids. 30-amp fits your WindSport perfectly." },
+        { name: "Lake Leatherwood City Park RV — Eureka Springs, AR", type: "rv", label: "RV Park", hookups: "Full hookups · 30/50 amp · WiFi", pullThru: "Yes", rate: "$38–52/night", desc: "Gorgeous wooded setting on a 85-acre lake in Eureka Springs. Walking distance to trails, pedal boats for kids, great base for the town's Victorian charm. Rated 8.8/10." },
+        { name: "Table Rock State Park Campground — Branson, MO", type: "state", label: "State Park", hookups: "Electric (30/50 amp) · Water", pullThru: "Some sites", rate: "$22–35/night", desc: "On beautiful Table Rock Lake near Branson. Book at Missouri state parks site. Boat rentals, swimming, fishing right from camp. Great if you want to mix nature with Branson shows." }
+      ],
+      stops: [
+        { name: "Buffalo National River Float — Steel Creek Launch", kid: "6-yr-old especially", detail: "Gentle float on crystal-clear water through towering limestone bluffs. Rent canoes or a raft in Ponca or Jasper. Best section: Ponca to Kyle's Landing (7 mi, 3-4 hrs). Too far for the 3-yr-old unassisted — share a canoe. Stunning." },
+        { name: "Boxley Valley Elk Meadow", kid: "Both ages", detail: "Drive through at dawn or dusk — one of the best spots in America to see wild elk from your vehicle. Pull over on AR-43. Your 6-yr-old will remember this forever." },
+        { name: "Eureka Springs, AR — Downtown", kid: "Both ages", detail: "Entire Victorian town on the National Historic Register. No two streets are at the same level — the whole place is built into a hillside. Unique candy shops, art galleries, and the trolley the girls will love. 30 min from camp." },
+        { name: "Blanchard Springs Caverns — Mountain View, AR", kid: "6-yr-old especially", detail: "One of the most developed show caves in the US. Multiple tour levels. The Dripstone Trail (1 hr, easy walk) is perfect for both girls — massive formations, underground lake. $10 adults, $5 kids. Book at recreation.gov." },
+        { name: "Branson, MO — Silver Dollar City", kid: "Both ages", detail: "Top theme park for families with young kids — 1880s Ozark craftsmen theme with gentle rides and shows the 3-yr-old can ride. Half-day minimum. 45 min from Table Rock Lake. Pricey but worth it for the girls." },
+        { name: "Roaring River State Park Trout Hatchery — Cassville, MO", kid: "Both ages", detail: "Watch tens of thousands of rainbow trout at the fish hatchery — kids lose their minds. Free. Then fish in the river downstream. Missouri trout season is daily with a license." }
+      ],
+      parks: "Buffalo National River is the main event — 135 miles of undammed river with 95,000 acres of wilderness. Ozark National Forest surrounds the Buffalo and has dozens of short waterfall trails. Table Rock Lake (Branson area) is 800 miles of shoreline — great for a day on the water.",
+      warning: "Route from Smithfield: I-40 W through Tennessee into Arkansas — about 900 miles, 14-15 hours total. Break it into two driving days (stop overnight near Memphis or Little Rock). The Ozarks themselves are very RV-friendly — US-65 and US-412 are wide and well-maintained. Avoid AR-7 between Jasper and Russellville with the coach — it's gorgeous but steep and winding. Fuel is less frequent in rural Arkansas — fill up when you see it."
     }
   };
 
@@ -2624,6 +2644,7 @@
     else if (dest.includes('myrtle')||dest.includes('myrtle beach'))                         matchKey = 'myrtle';
     else if (dest.includes('charleston')||dest.includes('sc'))                               matchKey = 'charleston';
     else if (dest.includes('blue ridge')||dest.includes('blueridge'))                        matchKey = 'blueridge';
+    else if (dest.includes('ozark')||dest.includes('buffalo river')||dest.includes('eureka springs')||dest.includes('branson')) matchKey = 'ozarks';
 
     const resultDiv     = document.getElementById('tripResult');
     const resultTitle   = document.getElementById('resultTitle');
@@ -2676,7 +2697,7 @@
       resultContent.innerHTML = `
         <div class="alert info" style="margin-bottom:20px">
           <div class="alert-icon">🗺️</div>
-          <div><strong>${destination}</strong> — This destination isn't in the pre-loaded library yet. Below are your fuel estimates and the universal checklist. To get a full custom plan with specific campsites and stops, just tell me <em>"add ${destination} to my trip planner"</em> in the chat.</div>
+          <div><strong>${destination}</strong> — Here are your fuel estimates for this trip. Live campsite results from Recreation.gov and Google are loading below — scroll down to see real campgrounds near your destination.</div>
         </div>
         ${buildFuelBlock(300, nights, campsiteType)}
         <div class="alert warning" style="margin-top:20px">

@@ -73,14 +73,17 @@
     /* ── NAV ── */
     .nav {
       background: var(--dusk);
-      position: sticky;
+      position: fixed;
       top: 0;
-      z-index: 100;
+      left: 0;
+      right: 0;
+      z-index: 1000;
       padding: 0 20px;
       display: flex;
       overflow-x: auto;
       scrollbar-width: none;
     }
+    body { padding-top: 52px; }
     .nav::-webkit-scrollbar { display: none; }
     .nav a {
       color: rgba(255,255,255,0.75);
@@ -1911,18 +1914,11 @@
     } catch (err) {
       spinner.style.display = 'none';
       if (err.message === 'Location not found') {
-        status.textContent = 'Could not locate that destination — try adding a state abbreviation.';
-      } else if (err.message.includes('fetch')) {
-        status.textContent = 'API keys not yet configured — add them in Vercel settings.';
-        cards.innerHTML = `<div class="no-results" style="color:#e07b39">
-          ⚙️ <strong>Almost there!</strong><br><br>
-          Add your API keys to Vercel to enable live search:<br><br>
-          <strong>RIDB_API_KEY</strong> — from recreation.gov<br>
-          <strong>GOOGLE_PLACES_KEY</strong> — from Google Cloud Console<br><br>
-          Vercel Dashboard → rv-trip-planner → Settings → Environment Variables
-        </div>`;
+        status.textContent = 'Could not locate that destination — try adding a state abbreviation (e.g. "Asheville, NC").';
+        cards.innerHTML = `<div class="no-results">Destination not found. Try being more specific, like "Asheville, NC" or "Gatlinburg, TN".</div>`;
       } else {
-        status.textContent = 'Search error — try again.';
+        status.textContent = 'Search error — check your connection and try again.';
+        cards.innerHTML = `<div class="no-results">Something went wrong with the campsite search. Make sure you're on the live site (rv-trip-planner-seven.vercel.app) and try again.</div>`;
       }
     }
   }
